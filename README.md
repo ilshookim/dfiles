@@ -1,4 +1,3 @@
-A simple command-line application.
+# dcache
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+cache deletion utility with dart language.
