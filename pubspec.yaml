@@ -1,5 +1,5 @@
 name: dcache
-description: cache deletion utility.
+description: cache deletion utility
 version: 1.0.0
 homepage: https://github.com/ilshookim/dcache
 
@@ -12,6 +12,7 @@ dependencies:
   args: ^1.6.0
   shelf: ^0.7.9
   shelf_router: ^0.7.3
+  shelf_static: ^0.2.8
 
 dev_dependencies:
   pedantic: ^1.9.0
