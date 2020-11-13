@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 import 'package:args/args.dart';
+import 'package:dcli/dcli.dart';
 
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_static/shelf_static.dart';
@@ -12,16 +13,23 @@ import 'package:shelf/shelf_io.dart';
 
 class Global {
   static final String spec = 'pubspec.yaml';
-  static final String localhost = 'localhost';
-  static final String port = '8080';
+  static final String localhost = '0.0.0.0';
+  static final String port = '8088';
+  static final String currentPath = dirname(Platform.script.toFilePath());
   static final int exitCodeCommandLineUsageError = 64;
 }
 
-Future<Map> getYaml() async {
-  final String path = join(dirname(Platform.script.toFilePath()), '../${Global.spec}');
-  final File file = new File(path);
-  final String text = await file.readAsString();
-  final Map yaml = loadYaml(text);
+Future<Map> configInfo() async {
+  Map yaml = Map();
+  try {
+    final String path = join(Global.currentPath, '../${Global.spec}');
+    final File file = new File(path);
+    final String text = await file.readAsString();
+    yaml = loadYaml(text);
+  }
+  catch (exc) {
+    print('configInfo: exc=$exc');
+  }
   return yaml;
 }
 
@@ -37,24 +45,23 @@ void main(List<String> arguments) async {
     return Response.ok('Hello ${userName}');
   });
 
-  final String path = join(dirname(Platform.script.toFilePath()), '.');
+  final String path = join(Global.currentPath, '.');
   final Handler index = createStaticHandler(path, defaultDocument: 'index.html');
   final Handler favicon = createStaticHandler(path, defaultDocument: 'favicon.ico');
-  final Handler handler = Cascade().add(index).add(favicon).add(api.handler).handler;
+  final Handler cascade = Cascade().add(index).add(favicon).add(api.handler).handler;
 
   final ArgParser argParser = ArgParser()..addOption('port', abbr: 'p');
   final ArgResults argResults = argParser.parse(arguments);
-  final String argPort = argResults['port'] ?? Platform.environment['DCACHE_PORT'] ?? Global.port;
+  final String portOption = argResults['port'] ?? Platform.environment['DCACHE_PORT'] ?? Global.port;
 
   final String host = Global.localhost;
-  final int port = int.tryParse(argPort);
-  final server = await serve(handler, host, port);
+  final int port = int.tryParse(portOption);
+  final Handler handler = const Pipeline().addMiddleware(logRequests()).addHandler(cascade);
+  final HttpServer server = await serve(handler, host, port);
 
-  final Map yaml = await getYaml();
-  final String appName = yaml['name'];
-  final String appDesc = yaml['description'];
-  final String appVer = yaml['version'];
-  final String hostIp = server.address.host;
-  final int hostPort = server.port;
-  print('$appName $appVer - $appDesc serving at http://$hostIp:$hostPort');
+  final Map config = await configInfo();
+  final String appName = config['name'];
+  final String appDesc = config['description'];
+  final String appVer = config['version'];
+  print('$appName $appVer - $appDesc serving at http://${server.address.host}:${server.port}');
 }
