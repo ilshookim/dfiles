@@ -54,8 +54,9 @@ $ docker-machine env default
 > export DOCKER_HOST="tcp://192.168.99.100:2376"
 > export DOCKER_CERT_PATH="/Users/mydspr/.docker/machine/machines/default"
 > export DOCKER_MACHINE_NAME="default"
-> # Run this command to configure your shell:
-> # eval $(docker-machine env default)
+>
+> Run this command to configure your shell:
+> eval $(docker-machine env default)
 
 Usually this prints out the command to set all the env variables set for MacOS; which is the following:
 

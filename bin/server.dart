@@ -14,8 +14,8 @@ import 'package:shelf/shelf_io.dart';
 class Global {
   static final String currentPath = dirname(Platform.script.toFilePath());
   static final String pubspecName = 'pubspec.yaml';
-  static final String index = 'index.html';
-  static final String favicon = 'favicon.ico';
+  static final String indexName = 'index.html';
+  static final String faviconName = 'favicon.ico';
 
   static final String portOption = 'port';
   static final String portAbbrOption = 'p';
@@ -29,6 +29,36 @@ class Global {
   static final String description = 'description';
 
   static final int exitCodeCommandLineUsageError = 64;
+}
+
+class PurgeTimer {
+  Timer _timer;
+  Duration _periodic = Duration(seconds: 30);
+
+  PurgeTimer({Duration duration, bool autoStart = true}) {
+    _periodic = duration;
+    if (autoStart) start();
+  }
+
+  void stop() {
+    _timer.cancel();
+    print('PurgeTimer: stop');
+  }
+
+  void start() {
+    if (_timer != null && _timer.isActive) {
+      print('PurgeTimer: alive');
+      return;
+    }
+    print('PurgeTimer: start');
+    _timer = Timer.periodic(_periodic, (Timer timer) { 
+      print('timer: duration=$_periodic');
+    });
+  }
+
+  Future<int> purge(String path) async {
+    return path.length;
+  }
 }
 
 Future<Map> configInfo() async {
@@ -47,20 +77,22 @@ Future<Map> configInfo() async {
 
 void main(List<String> arguments) async {
   try {
+    final PurgeTimer purgeTimer = PurgeTimer(duration: Duration(seconds: 1), autoStart: false);
     final Router api = Router();
 
-    api.get('/users/<userName>/whoami', (Request request) async {
-      final String userName = params(request, 'userName');
-      return Response.ok('You are ${userName}');
+    api.get('/purge/start', (Request request) async {
+      purgeTimer.start();
+      return Response.ok('Purge Started');
     });
 
-    api.get('/users/<userName>/say-hello', (Request request, String userName) async {
-      return Response.ok('Hello ${userName}');
+    api.get('/purge/stop', (Request request) async {
+      purgeTimer.stop();
+      return Response.ok('Purge Stopped');
     });
 
     final String path = join(Global.currentPath, '.');
-    final Handler index = createStaticHandler(path, defaultDocument: Global.index);
-    final Handler favicon = createStaticHandler(path, defaultDocument: Global.favicon);
+    final Handler index = createStaticHandler(path, defaultDocument: Global.indexName);
+    final Handler favicon = createStaticHandler(path, defaultDocument: Global.faviconName);
     final Handler cascade = Cascade().add(index).add(favicon).add(api.handler).handler;
 
     final ArgParser argParser = ArgParser()..addOption(Global.portOption, abbr: Global.portAbbrOption);
