@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:shelf/shelf_io.dart';
 
-import 'api.dart';
 import 'global.dart';
+import 'api.dart';
 
 void main(List<String> arguments) async {
   try {

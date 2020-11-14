@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
+
+import 'package:dcli/dcli.dart';
+import 'package:dcli/src/functions/is.dart';
 
 import 'global.dart';
 
@@ -31,20 +33,6 @@ class Purge {
     return _consume.isRunning;
   }
 
-  bool stop() {
-    bool succeed = false;
-    try {
-      if (isActive) {
-        _timer.cancel();
-        succeed = true;
-      }
-    }
-    catch (exc) {
-      print('stop: exc=$exc');
-    }
-    return succeed;
-  }
-
   bool start() {
     bool succeed = false;
     try {
@@ -55,6 +43,20 @@ class Purge {
     }
     catch (exc) {
       print('start: exc=$exc');
+    }
+    return succeed;
+  }
+
+  bool stop() {
+    bool succeed = false;
+    try {
+      if (isActive) {
+        _timer.cancel();
+        succeed = true;
+      }
+    }
+    catch (exc) {
+      print('stop: exc=$exc');
     }
     return succeed;
   }
@@ -75,15 +77,33 @@ class Purge {
     }
   }
 
-  Future<int> _purge(String path) async {
-    bool exists = path.isNotEmpty && Directory(path).existsSync();
+  Future<int> _purge(String root) async {
+    bool exists = root.isNotEmpty && Directory(root).existsSync();
     if (!exists) return 0;
     int purged = 0;
     try {
-      final int seconds = _random(min: 1, max: 20);
-      print('purge: began -> seconds=$seconds, path=$path, exists=$exists');
-      await Future.delayed(Duration(seconds: seconds));
-      purged = seconds;
+      print('find: ===============');
+      final String root2 = join(root, '..', '..');
+      final String pattern = '*';
+      find(pattern, 
+        root: root2, 
+        recursive: true, 
+        types: [Find.directory], 
+        progress: Progress((String path) {
+          try {
+            if (!_timer.isActive)
+              return false;
+            List<String> files = find(pattern, root: path, recursive: false).toList();
+            print('find: path=$path, files=${files.length}');
+            // final DateTime datetime = lastModified(path);
+            // print('find: path=$path, datetime=$datetime');
+            return true;
+          }
+          catch (exc) {
+            print('path: exc=$exc');
+          }
+      }));
+      print('find: <<<<<end>>>>>');
     }
     catch (exc) {
       print('purge: exc=$exc');
@@ -93,9 +113,5 @@ class Purge {
       print('purge: ended -> purged=$purged, consumed=$consumed');
     }
     return purged;
-  }
-
-  int _random({int min = 1, int max = 30}) {
-    return min + Random().nextInt(max - min);
   }
 }
