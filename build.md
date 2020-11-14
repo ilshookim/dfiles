@@ -26,8 +26,8 @@ $ docker-machine create --driver virtualbox default
 
 Using the following command for your Docker Machine, you should see whether your last Docker engine got created and whether you have more than one engine if desired:
 
-> docker-machine ls
->
+$ docker-machine ls
+
 > NAME      ACTIVE   DRIVER       STATE     URL   SWARM   DOCKER    ERRORS
 > default   -        virtualbox   Stopped                 Unknown
 
@@ -37,8 +37,8 @@ $ docker-machine start default
 
 Checking your list of Docker engines again should lead you to one running Docker engine:
 
-> docker-machine ls
-> 
+$ docker-machine ls
+ 
 > NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
 > default   -        virtualbox   Running   tcp://192.168.99.100:2376           v19.03.5
 
