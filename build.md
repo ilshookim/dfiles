@@ -1,6 +1,6 @@
-# build macOS
+# docker build macOS
 
-* please refer to https://www.robinwieruch.de/docker-macos
+please refer to https://www.robinwieruch.de/docker-macos
 
 Install the docker dependency with Homebrew after making sure that all Homebrew dependencies are on the latest version:
 
@@ -29,6 +29,7 @@ Using the following command for your Docker Machine, you should see whether your
 $ docker-machine ls
 
 > NAME      ACTIVE   DRIVER       STATE     URL   SWARM   DOCKER    ERRORS
+>
 > default   -        virtualbox   Stopped                 Unknown
 
 Usually the Docker engine's STATE should be Running. If it isn't, like it's shown in the last output, you can start the engine with Docker Machine:
@@ -40,6 +41,7 @@ Checking your list of Docker engines again should lead you to one running Docker
 $ docker-machine ls
  
 > NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+>
 > default   -        virtualbox   Running   tcp://192.168.99.100:2376           v19.03.5
 
 Just for the sake of knowing about it, you can stop your Docker engine anytime too:
@@ -51,11 +53,15 @@ Make sure that your Docker engine is running for the next steps. Last, we need t
 $ docker-machine env default
  
 > export DOCKER_TLS_VERIFY="1"
+>
 > export DOCKER_HOST="tcp://192.168.99.100:2376"
+>
 > export DOCKER_CERT_PATH="/Users/mydspr/.docker/machine/machines/default"
+>
 > export DOCKER_MACHINE_NAME="default"
 >
 > Run this command to configure your shell:
+>
 > eval $(docker-machine env default)
 
 Usually this prints out the command to set all the env variables set for MacOS; which is the following:
@@ -67,5 +73,6 @@ Finally, you should be able to start a Docker container with a pre-defined Docke
 $ docker run hello-world
  
 > Hello from Docker!
+>
 > This message shows that your installation appears to be working correctly.
 
