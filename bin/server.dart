@@ -14,7 +14,7 @@ void main(List<String> arguments) async {
 
     final String host = Global.defaultHost;
     final int port = int.tryParse(portOption);
-    final HttpServer server = await serve(API.v1, host, port);
+    final HttpServer server = await serve(API().v1, host, port);
 
     final Map pubspec = await Global.pubspec();
     final String name = pubspec[Global.name];
