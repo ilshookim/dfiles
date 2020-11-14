@@ -12,7 +12,9 @@ $ docker build -t dcache .
 
 Time how long it takes to lauch a server
 
-$ time docker run -d -it -p 8088:8088 --name dcache dcache
+$ docker run -d -it -p 8088:8088 --name dcache dcache
+
+$ time docker run -it -p 8088:8088 --name dcache dcache
 
 Line 30 of bin/server.dart causes the server to exit as soon as it is ready to listen for requests.
 
