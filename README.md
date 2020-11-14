@@ -24,6 +24,6 @@ Remove the image
 
 $ docker image rm dcache
 
-# build
+# docker build
 
-[build for macOS](https://github.com/ilshookim/dcache/blob/master/build.md)
+[docker build for macOS](https://github.com/ilshookim/dcache/blob/master/build.md)
