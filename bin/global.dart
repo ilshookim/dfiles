@@ -1,3 +1,8 @@
+/// dcache designed by ilshookim
+/// MIT License
+/// 
+/// https://github.com/ilshookim/dcache
+/// 
 import 'dart:io';
 
 import 'package:path/path.dart';

@@ -1,4 +1,4 @@
-# docker build macOS
+# docker build on docker-machine for macOS
 
 please refer to https://www.robinwieruch.de/docker-macos
 
