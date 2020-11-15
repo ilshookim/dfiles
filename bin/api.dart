@@ -7,38 +7,46 @@ import 'global.dart';
 import 'purge.dart';
 
 class API {
-  final Purge purge = Purge(autostart: true);
+  final Purge purge = Purge();
   final Router router = Router();
-  final String version = "v1";
-
-  Future<Response> onStart(Request request) async {
-    final bool succeed = purge.start();
-    final bool running = purge.isRunning;
-    return Response.ok('purge: start=$succeed, running=$running');
-  }
 
   Future<Response> onStop(Request request) async {
     final bool succeed = purge.stop();
     final bool running = purge.isRunning;
-    return Response.ok('purge: stop=$succeed, running=$running');
+    final String message = 'purge: stop=$succeed, running=$running';
+    print(message);
+    return Response.ok(message);
   }
 
-  Handler get v1 {
-    try {
-      router.get(uriPath('stop'), onStop);
-      router.get(uriPath('start'), onStart);
-      router.get(uriPath('stop', version: version), onStop);
-      router.get(uriPath('start', version: version), onStart);
+  Future<Response> onStart(Request request) async {
+    final bool succeed = purge.start();
+    final bool running = purge.isRunning;
+    final String message = 'purge: start=$succeed, running=$running, root=${purge.root}';
+    print(message);
+    return Response.ok(message);
+  }
 
-      final String path = join(Global.currentPath, '.');
-      final Handler index = createStaticHandler(path, defaultDocument: Global.indexName);
-      final Handler favicon = createStaticHandler(path, defaultDocument: Global.faviconName);
+  Handler v1({String root}) {
+    try {
+      final String ver1 = "v1";
+      router.get(uri('stop'), onStop);
+      router.get(uri('start'), onStart);
+      router.get(uri('stop', version: ver1), onStop);
+      router.get(uri('start', version: ver1), onStart);
+
+      final String dcache = Global.currentPath;
+      final Handler index = createStaticHandler(dcache, defaultDocument: Global.indexName);
+      final Handler favicon = createStaticHandler(dcache, defaultDocument: Global.faviconName);
       final Handler cascade = Cascade().add(index).add(favicon).add(router.handler).handler;
       final Handler handler = Pipeline().addMiddleware(logRequests()).addHandler(cascade);
       return handler;
     }
     catch (exc) {
-      print('v1: exc=$exc');
+      print('v1: $exc');
+    }
+    finally {
+      purge.root = root;
+      purge.start();
     }
     final Handler defaultHandler = Pipeline().addHandler((Request request) {
       return Response.ok('Request for ${request.url}');
@@ -46,7 +54,7 @@ class API {
     return defaultHandler;
   }
 
-  String uriPath(String path, {String version}) {
+  String uri(String path, {String version}) {
     if (version == null)
       return join('/', path);
     return join('/', version, path);

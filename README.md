@@ -1,22 +1,20 @@
 # dcache
 
-cache file deletion utility with dart language.
+delete cache utility with dart language.
 
 # docker
-
-This example builds a server using [dart2native](https://dart. dev/tools/dart2native) to run in a container.
 
 Create a Docker image on your system
 
 $ docker build -t dcache .
 
-Time how long it takes to lauch a server
+Line 30 of bin/server.dart causes the server to exit as soon as it is ready to listen for requests.
 
 $ docker run -d -it -p 8088:8088 --name dcache dcache
 
-$ time docker run -it -p 8088:8088 --name dcache dcache
+Time how long it takes to lauch a server
 
-Line 30 of bin/server.dart causes the server to exit as soon as it is ready to listen for requests.
+$ time docker run -it -p 8088:8088 --name dcache dcache
 
 Remove the container
 

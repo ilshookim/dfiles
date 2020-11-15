@@ -1,5 +1,5 @@
 name: dcache
-description: cache deletion utility
+description: delete cache utility
 version: 1.0.0
 homepage: https://github.com/ilshookim/dcache
 
