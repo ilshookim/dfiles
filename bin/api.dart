@@ -39,7 +39,7 @@ class API {
       router.get(uri('stop', version: ver1), onStop);
       router.get(uri('start', version: ver1), onStart);
 
-      final String dcache = Global.currentPath;
+      final String dcache = join(Global.currentPath, '..', 'dcache');
       final Handler index = createStaticHandler(dcache, defaultDocument: Global.indexName);
       final Handler favicon = createStaticHandler(dcache, defaultDocument: Global.faviconName);
       final Handler cascade = Cascade().add(index).add(favicon).add(router.handler).handler;
