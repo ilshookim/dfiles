@@ -16,6 +16,10 @@ Time how long it takes to lauch a server
 
 $ time docker run -it -p 8088:8088 --name dcache dcache
 
+Watch logs such as tail
+
+$ docker logs -t -f dcache
+
 Remove the container
 
 $ docker rm -f dcache
