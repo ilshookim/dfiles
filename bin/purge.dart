@@ -9,8 +9,6 @@ import 'dart:io';
 import 'package:dcli/dcli.dart';
 import 'package:dcli/src/functions/is.dart';
 
-import 'global.dart';
-
 class Purge {
   String root;
   Stopwatch _consume = Stopwatch();
@@ -83,7 +81,6 @@ class Purge {
   Future<int> _purge(String root) async {
     int purged = 0;
     try {
-      print('find: <<<<< began >>>>>');
       final String pattern = '*';
       find(pattern, 
         root: root, 
@@ -106,9 +103,7 @@ class Purge {
             print('path: $exc');
           }
           return succeed;
-      }
-      ));
-      print('find: <<<<< ended >>>>>');
+      }));
     }
     catch (exc) {
       print('purge: $exc');
