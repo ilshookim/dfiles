@@ -7,42 +7,40 @@ import 'package:dcli/src/functions/is.dart';
 import 'global.dart';
 
 class Purge {
+  String root;
   Stopwatch _consume = Stopwatch();
   Duration _duration = Duration(seconds: 1);
-  String _path = Global.currentPath;
   Timer _timer;
 
-  Purge({String path, Duration duration, bool autostart = true}) {
+  Purge({Duration duration, bool autostart = false}) {
     try {
-      _path = path ?? _path;
       _duration = duration ?? _duration;
     }
     catch (exc) {
-      print('constructor: exc=$exc');
+      print('constructor: $exc');
     }
     finally {
       if (autostart) start();
     }
   }
 
-  bool get isActive {
-    return (_timer != null && _timer.isActive);
-  }
-
-  bool get isRunning {
-    return _consume.isRunning;
-  }
+  bool get isActive => _timer != null && _timer.isActive;
+  bool get isRunning => _consume.isRunning;
 
   bool start() {
     bool succeed = false;
     try {
+      if (isRunning)
+        return succeed;
+      if (root == null || !Directory(root).existsSync())
+        return succeed;
       if (!isActive) {
         _timer = Timer.periodic(_duration, _periodic);
         succeed = true;
       }
     }
     catch (exc) {
-      print('start: exc=$exc');
+      print('start: $exc');
     }
     return succeed;
   }
@@ -56,7 +54,7 @@ class Purge {
       }
     }
     catch (exc) {
-      print('stop: exc=$exc');
+      print('stop: $exc');
     }
     return succeed;
   }
@@ -66,11 +64,11 @@ class Purge {
       return;
     try {
       _consume.start();
-      await _purge(_path);
+      await _purge(root);
       _consume.stop();
     }
     catch (exc) {
-      print('periodic: exc=$exc');
+      print('periodic: $exc');
     }
     finally {
       _consume.reset();
@@ -78,35 +76,37 @@ class Purge {
   }
 
   Future<int> _purge(String root) async {
-    bool exists = root.isNotEmpty && Directory(root).existsSync();
-    if (!exists) return 0;
     int purged = 0;
     try {
-      print('find: ===============');
-      final String root2 = join(root, '..', '..');
+      print('find: <<<<< began >>>>>');
       final String pattern = '*';
       find(pattern, 
-        root: root2, 
+        root: root, 
         recursive: true, 
         types: [Find.directory], 
-        progress: Progress((String path) {
+        progress: Progress((String found) {
+          bool succeed = false;
           try {
             if (!_timer.isActive)
-              return false;
-            List<String> files = find(pattern, root: path, recursive: false).toList();
-            print('find: path=$path, files=${files.length}');
-            // final DateTime datetime = lastModified(path);
-            // print('find: path=$path, datetime=$datetime');
-            return true;
+              return succeed;
+            List<String> files = find(pattern, root: found, recursive: false).toList();
+            print('find: path=$found, files=${files.length}');
+            files.forEach((String file) { 
+              final DateTime datetime = lastModified(file);
+              print('find: file=$file, datetime=$datetime');
+            });
+            succeed = true;
           }
           catch (exc) {
-            print('path: exc=$exc');
+            print('path: $exc');
           }
-      }));
-      print('find: <<<<<end>>>>>');
+          return succeed;
+      }
+      ));
+      print('find: <<<<< ended >>>>>');
     }
     catch (exc) {
-      print('purge: exc=$exc');
+      print('purge: $exc');
     }
     finally {
       final int consumed = _consume.elapsedMilliseconds;
