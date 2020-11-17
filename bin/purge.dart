@@ -9,8 +9,12 @@ import 'dart:io';
 import 'package:dcli/dcli.dart';
 import 'package:dcli/src/functions/is.dart';
 
+import 'global.dart';
+
 class Purge {
-  String root;
+  String root = Global.defaultRoot;
+  int count = int.tryParse(Global.defaultCount);
+
   Stopwatch _consume = Stopwatch();
   Duration _duration = Duration(seconds: 1);
   Timer _timer;
@@ -65,15 +69,18 @@ class Purge {
   void _periodic(Timer timer) async {
     if (_consume.isRunning)
       return;
+      int purged = 0;
     try {
       _consume.start();
-      await _purge(root);
+      purged = await _purge(root);
       _consume.stop();
     }
     catch (exc) {
       print('periodic: $exc');
     }
     finally {
+      final int consumed = _consume.elapsedMilliseconds;
+      print('purge: purged=$purged, consumed=$consumed <- root=$root, count=$count');
       _consume.reset();
     }
   }
@@ -91,12 +98,36 @@ class Purge {
           try {
             if (!_timer.isActive)
               return succeed;
-            List<String> files = find(pattern, root: found, recursive: false).toList();
-            print('find: path=$found, files=${files.length}');
-            files.forEach((String file) { 
-              final DateTime datetime = lastModified(file);
-              print('find: file=$file, datetime=$datetime');
-            });
+            final List<String> files = find(pattern, root: found, recursive: false).toList();
+            final bool printAllFilesInPurgeHere = true;
+            final int  printFilesInPurgeHere = 10;
+            final bool purgeTruly = false;
+            final bool printPurgeFiles = true;
+            final bool purgeHere = files.length > count;
+            if (purgeHere) {
+              print('> too many files in a path: path=$found, files=${files.length}, count=$count');
+              files.sort((a, b) {
+                final DateTime l = lastModified(a);
+                final DateTime r = lastModified(b);
+                return l.compareTo(r);
+              });
+              if (printAllFilesInPurgeHere) {
+                int howManyFilesPrint = files.length;
+                if (printFilesInPurgeHere > 0) howManyFilesPrint = printFilesInPurgeHere;
+                for (int i=0; i<howManyFilesPrint; i++) {
+                  final String file = files[i];
+                  final DateTime datetime = lastModified(file);
+                  print('  > index=$i: file=$file, datetime=$datetime');
+                }
+                print('  > print here: until=$howManyFilesPrint');
+              }
+              for (int i=count; i<files.length; i++) {
+                final String file = files[i];
+                final DateTime datetime = lastModified(file);
+                if (printPurgeFiles) print('>>> deleted: index=$i, file=$file, datetime=$datetime');
+                if (purgeTruly) delete(file);
+              }
+            }
             succeed = true;
           }
           catch (exc) {
@@ -107,10 +138,6 @@ class Purge {
     }
     catch (exc) {
       print('purge: $exc');
-    }
-    finally {
-      final int consumed = _consume.elapsedMilliseconds;
-      print('purge: ended -> purged=$purged, consumed=$consumed');
     }
     return purged;
   }

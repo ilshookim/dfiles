@@ -12,12 +12,16 @@ class Global {
   static final String defaultHost = '0.0.0.0';
   static final String defaultPort = '8088';
   static final String defaultRoot = './dcache/monitor';
+  static final String defaultCount = '5000';
   static final String portOption = 'port';
   static final String portAbbrOption = 'p';
   static final String portEnvOption = 'DCACHE_PORT';
   static final String rootOption = 'root';
   static final String rootAbbrOption = 'r';
   static final String rootEnvOption = 'DCACHE_ROOT';
+  static final String countOption = 'count';
+  static final String countAbbrOption = 'c';
+  static final String countEnvOption = 'DCACHE_COUNT';
 
   static final String indexName = 'index.html';
   static final String faviconName = 'favicon.ico';
