@@ -31,7 +31,7 @@ class API {
     return Response.ok(message);
   }
 
-  Handler v1({String root}) {
+  Handler v1({String root, int count}) {
     try {
       final String ver1 = "v1";
       router.get(uri('stop'), onStop);
@@ -50,7 +50,8 @@ class API {
       print('v1: $exc');
     }
     finally {
-      purge.root = root;
+      purge.root = root ?? purge.root;
+      purge.count = count ?? purge.count;
       purge.start();
     }
     final Handler defaultHandler = Pipeline().addHandler((Request request) {
