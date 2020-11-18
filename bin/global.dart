@@ -8,11 +8,20 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
+extension BoolParsing on String {
+  bool parseBool() {
+    final String lowerCase = this.toLowerCase();
+    if (lowerCase.isEmpty || lowerCase == 'false') return false;
+    return lowerCase == 'true' || lowerCase != '0';
+  }
+}
+
 class Global {
   static final String defaultHost = '0.0.0.0';
   static final String defaultPort = '8088';
   static final String defaultRoot = './dcache/monitor';
   static final String defaultCount = '5000';
+  static final String defaultPrintAll = 'false';
   static final String portOption = 'port';
   static final String portAbbrOption = 'p';
   static final String portEnvOption = 'DCACHE_PORT';
@@ -22,6 +31,9 @@ class Global {
   static final String countOption = 'count';
   static final String countAbbrOption = 'c';
   static final String countEnvOption = 'DCACHE_COUNT';
+  static final String printAllOption = 'print';
+  static final String printAllAbbrOption = 't';
+  static final String printAllEnvOption = 'DCACHE_PRINT_ALL';
 
   static final String indexName = 'index.html';
   static final String faviconName = 'favicon.ico';

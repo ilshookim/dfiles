@@ -16,6 +16,13 @@ Time how long it takes to lauch a server
 
 $ time docker run -it -p 8088:8088 --name dcache dcache
 
+$ touch dcache.env
+$ vi dcache.env
+DCACHE_PORT=8086
+DCACHE_COUNT=5
+DCACHE_ROOT=/app/dcache/mounted
+DCACHE_PRINT_ALL=true
+
 The server using default root changed from invalid DCACHE_ROOT
 
 $ docker run -d -it -p 8088:8086 --env-file=dcache.env --name dcache dcache
