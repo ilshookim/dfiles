@@ -16,7 +16,8 @@ import 'api.dart';
 /// working directory:
 /// /app                <- working directory
 /// /app/dcache         <- program directory
-/// /app/dcache/monitor <- monitor directory
+/// /app/dcache/monitor <- monitor directory (default)
+/// /app/dcache/mounted <- monitor directory (mounted)
 
 void main(List<String> arguments) async {
   try {
@@ -26,19 +27,22 @@ void main(List<String> arguments) async {
       ..addOption(Global.countOption, abbr: Global.countAbbrOption);
     final ArgResults argResults = argParser.parse(arguments);
     final String portOption = argResults[Global.portOption] ?? Platform.environment[Global.portEnvOption] ?? Global.defaultPort;
-    final String rootOption = argResults[Global.rootOption] ?? Platform.environment[Global.rootEnvOption] ?? Global.defaultRoot;
     final String countOption = argResults[Global.countOption] ?? Platform.environment[Global.countEnvOption] ?? Global.defaultCount;
+    final String rootOption = argResults[Global.rootOption] ?? Platform.environment[Global.rootEnvOption] ?? Global.defaultRoot;
+    final bool rootExists = Directory(rootOption).existsSync();
+    final String rootMounted = rootExists ? rootOption : Global.defaultRoot;
 
     final String host = Global.defaultHost;
     final int port = int.tryParse(portOption);
-    final Handler handler = API().v1(root: rootOption, count: int.tryParse(countOption));
+    final Handler handler = API().v1(root: rootMounted, count: int.tryParse(countOption));
     final HttpServer server = await serve(handler, host, port);
 
     final Map pubspec = await Global.pubspec();
     final String name = pubspec[Global.name];
     final String version = pubspec[Global.version];
     final String description = pubspec[Global.description];
-    print('$name $version - $description serving at http://${server.address.host}:${server.port} purging at $rootOption');
+    print('$name $version - $description serving at http://${server.address.host}:${server.port}');
+    print('purge monitoring to $rootMounted using option: root=$rootOption, count=$countOption');
   }
   catch (exc) {
     print('main: $exc');

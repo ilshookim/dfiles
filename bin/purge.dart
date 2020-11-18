@@ -100,7 +100,7 @@ class Purge {
               return succeed;
             final List<String> files = find(pattern, root: found, recursive: false).toList();
             final bool printAllFilesInPurgeHere = true;
-            final int  printFilesInPurgeHere = 10;
+            final int  printFilesUntil = 10;
             final bool purgeTruly = false;
             final bool printPurgeFiles = true;
             final bool purgeHere = files.length > count;
@@ -112,14 +112,15 @@ class Purge {
                 return l.compareTo(r);
               });
               if (printAllFilesInPurgeHere) {
-                int howManyFilesPrint = files.length;
-                if (printFilesInPurgeHere > 0) howManyFilesPrint = printFilesInPurgeHere;
-                for (int i=0; i<howManyFilesPrint; i++) {
+                int howManyFilesArePrinted = files.length;
+                final bool untilSpecified = printFilesUntil > 0;
+                if (untilSpecified) howManyFilesArePrinted = printFilesUntil;
+                for (int i=0; i<howManyFilesArePrinted; i++) {
                   final String file = files[i];
                   final DateTime datetime = lastModified(file);
                   print('  > index=$i: file=$file, datetime=$datetime');
                 }
-                print('  > print here: until=$howManyFilesPrint');
+                if (untilSpecified) print('  > print skipped: until=$howManyFilesArePrinted');
               }
               for (int i=count; i<files.length; i++) {
                 final String file = files[i];
