@@ -80,8 +80,11 @@ class Purge {
       print('periodic: $exc');
     }
     finally {
-      final int consumed = _consume.elapsedMilliseconds;
-      print('purge: purged=$purged, consumed=$consumed <- root=$root, count=$count');
+      final bool printAllFiles = printAll.parseBool();
+      if (printAllFiles) {
+        final int consumed = _consume.elapsedMilliseconds;
+        print('purge: purged=$purged, consumed=$consumed <- root=$root, count=$count, printAll=$printAll');
+      }
       _consume.reset();
     }
   }
@@ -102,7 +105,7 @@ class Purge {
               return succeed;
             final List<String> files = find(pattern, root: found, recursive: false).toList();
             final bool purgeReally = true;
-            final bool purgeHere = files.length >= count;
+            final bool purgeHere = files.length > count;
             if (printAllFiles) {
               print('> path=$found: files=${files.length}');
               for (int i=0; i<files.length; i++) {

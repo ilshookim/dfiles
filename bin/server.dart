@@ -44,7 +44,7 @@ void main(List<String> arguments) async {
     final String version = pubspec[Global.version];
     final String description = pubspec[Global.description];
     print('$name $version - $description serving at http://${server.address.host}:${server.port}');
-    print('purge monitoring to $rootMounted using option: root=$rootOption, count=$countOption');
+    print('purge monitor to $rootMounted using option: root=$rootOption, count=$countOption, printAll=$printAllOption');
   }
   catch (exc) {
     print('main: $exc');

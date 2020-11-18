@@ -21,7 +21,7 @@ class Global {
   static final String defaultPort = '8088';
   static final String defaultRoot = './dcache/monitor';
   static final String defaultCount = '5000';
-  static final String defaultPrintAll = 'true';
+  static final String defaultPrintAll = 'false';
   static final String portOption = 'port';
   static final String portAbbrOption = 'p';
   static final String portEnvOption = 'DCACHE_PORT';
