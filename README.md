@@ -16,6 +16,10 @@ Time how long it takes to lauch a server
 
 $ time docker run -it -p 8088:8088 --name dcache dcache
 
+bin/server.dart causes the server using environment
+
+$ docker run -d -it -p 8088:8086 --env-file=dcache.env --name dcache dcache
+
 Watch logs such as tail
 
 $ docker logs -t -f dcache

@@ -16,7 +16,8 @@ import 'api.dart';
 /// working directory:
 /// /app                <- working directory
 /// /app/dcache         <- program directory
-/// /app/dcache/monitor <- monitor directory
+/// /app/dcache/monitor <- monitor directory (default)
+/// /app/dcache/volume  <- monitor directory (mounted)
 
 void main(List<String> arguments) async {
   try {
@@ -38,7 +39,7 @@ void main(List<String> arguments) async {
     final String name = pubspec[Global.name];
     final String version = pubspec[Global.version];
     final String description = pubspec[Global.description];
-    print('$name $version - $description serving at http://${server.address.host}:${server.port} purging at $rootOption');
+    print('$name $version - $description serving at http://${server.address.host}:${server.port} purging at $rootOption which count is $countOption');
   }
   catch (exc) {
     print('main: $exc');
