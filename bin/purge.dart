@@ -99,11 +99,16 @@ class Purge {
             if (!_timer.isActive)
               return succeed;
             final List<String> files = find(pattern, root: found, recursive: false).toList();
-            final bool printAllFilesInPurgeHere = true;
-            final int  printFilesUntil = 10;
-            final bool purgeTruly = false;
-            final bool printPurgeFiles = true;
-            final bool purgeHere = files.length > count;
+            final bool printAll = true;
+            final bool purgeReally = true;
+            final bool purgeHere = files.length >= count;
+            if (printAll) {
+              print('> path=$found: files=${files.length}');
+              for (int i=0; i<files.length; i++) {
+                final String file = files[i];
+                print('file[$i]=$file');
+              }
+            }
             if (purgeHere) {
               print('> too many files in a path: path=$found, files=${files.length}, count=$count');
               files.sort((a, b) {
@@ -111,22 +116,11 @@ class Purge {
                 final DateTime r = lastModified(b);
                 return l.compareTo(r);
               });
-              if (printAllFilesInPurgeHere) {
-                int howManyFilesArePrinted = files.length;
-                final bool untilSpecified = printFilesUntil > 0;
-                if (untilSpecified) howManyFilesArePrinted = printFilesUntil;
-                for (int i=0; i<howManyFilesArePrinted; i++) {
-                  final String file = files[i];
-                  final DateTime datetime = lastModified(file);
-                  print('  > index=$i: file=$file, datetime=$datetime');
-                }
-                if (untilSpecified) print('  > print skipped: until=$howManyFilesArePrinted');
-              }
               for (int i=count; i<files.length; i++) {
                 final String file = files[i];
                 final DateTime datetime = lastModified(file);
-                if (printPurgeFiles) print('>>> deleted: index=$i, file=$file, datetime=$datetime');
-                if (purgeTruly) delete(file);
+                print('>>> deleted: index=$i, file=$file, datetime=$datetime');
+                if (purgeReally) delete(file);
               }
             }
             succeed = true;
