@@ -14,6 +14,7 @@ import 'global.dart';
 class Purge {
   String root = Global.defaultRoot;
   int count = int.tryParse(Global.defaultCount);
+  String printAll = Global.defaultPrintAll;
 
   Stopwatch _consume = Stopwatch();
   Duration _duration = Duration(seconds: 1);
@@ -89,6 +90,7 @@ class Purge {
     int purged = 0;
     try {
       final String pattern = '*';
+      final bool printAllFiles = printAll.parseBool();
       find(pattern, 
         root: root, 
         recursive: true, 
@@ -99,10 +101,9 @@ class Purge {
             if (!_timer.isActive)
               return succeed;
             final List<String> files = find(pattern, root: found, recursive: false).toList();
-            final bool printAll = true;
             final bool purgeReally = true;
             final bool purgeHere = files.length >= count;
-            if (printAll) {
+            if (printAllFiles) {
               print('> path=$found: files=${files.length}');
               for (int i=0; i<files.length; i++) {
                 final String file = files[i];
