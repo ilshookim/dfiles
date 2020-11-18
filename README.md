@@ -20,7 +20,9 @@ The server using default root changed from invalid DCACHE_ROOT
 
 $ docker run -d -it -p 8088:8086 --env-file=dcache.env --name dcache dcache
 
-The server using volume mounted DCACHE_ROOT
+The server using volume mounted DCACHE_ROOT for ~/mounted
+
+$ mkdir ~/mounted
 
 $ docker run -d -it -p 8088:8086 --env-file=dcache.env -v ~/mounted:/app/dcache/mounted --name dcache dcache
 
