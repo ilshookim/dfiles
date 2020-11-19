@@ -69,7 +69,7 @@ class Purge {
   }
 
   void _periodic(Timer timer) {
-    if (_consume.isRunning)
+    if (isRunning)
       return;
     int purged = 0;
     try {
@@ -102,7 +102,7 @@ class Purge {
         progress: Progress((String found) {
           bool succeed = false;
           try {
-            if (!_timer.isActive)
+            if (!isActive)
               return succeed;
             final List<String> files = find(pattern, root: found, recursive: false).toList();
             final bool purgeReally = true;
