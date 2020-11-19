@@ -40,7 +40,8 @@ class Purge {
     try {
       if (isRunning)
         return succeed;
-      if (root == null || !Directory(root).existsSync())
+      final bool rootExists = Directory(root).existsSync();
+      if (root == null || !rootExists)
         return succeed;
       if (!isActive) {
         _timer = Timer.periodic(_duration, _periodic);
