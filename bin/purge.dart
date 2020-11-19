@@ -67,13 +67,13 @@ class Purge {
     return succeed;
   }
 
-  void _periodic(Timer timer) async {
+  void _periodic(Timer timer) {
     if (_consume.isRunning)
       return;
-      int purged = 0;
+    int purged = 0;
     try {
       _consume.start();
-      purged = await _purge(root);
+      purged = _purge(root);
       _consume.stop();
     }
     catch (exc) {
@@ -89,7 +89,7 @@ class Purge {
     }
   }
 
-  Future<int> _purge(String root) async {
+  int _purge(String root) {
     int purged = 0;
     try {
       final String pattern = '*';
