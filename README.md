@@ -14,6 +14,10 @@ delete cache utility with dart language.
 * 그러므로 curl localhost:8088/stop 또는 curl localhost:8088/start와 같은 호출하여
 디캐쉬 서비스를 중지하거나 실행할 수가 있습니다.
 
+* 디캐쉬는 다트 언어(dart language)로 작성되었습니다.
+
+* 디캐쉬를 도커 이미지로 만드는 과정에서 네이티브로 빌드를 하기 때문에 네이티브 성능을 기대할 수가 있습니다.
+
 # docker
 
 Create a Docker image on your system
