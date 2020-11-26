@@ -40,7 +40,8 @@ class Purge {
     try {
       if (isRunning)
         return succeed;
-      if (root == null || !Directory(root).existsSync())
+      final bool rootExists = Directory(root).existsSync();
+      if (root == null || !rootExists)
         return succeed;
       if (!isActive) {
         _timer = Timer.periodic(_duration, _periodic);
@@ -67,13 +68,13 @@ class Purge {
     return succeed;
   }
 
-  void _periodic(Timer timer) async {
-    if (_consume.isRunning)
+  void _periodic(Timer timer) {
+    if (isRunning)
       return;
-      int purged = 0;
+    int purged = 0;
     try {
       _consume.start();
-      purged = await _purge(root);
+      purged = _purge(root);
       _consume.stop();
     }
     catch (exc) {
@@ -89,7 +90,7 @@ class Purge {
     }
   }
 
-  Future<int> _purge(String root) async {
+  int _purge(String root) {
     int purged = 0;
     try {
       final String pattern = '*';
@@ -101,7 +102,7 @@ class Purge {
         progress: Progress((String found) {
           bool succeed = false;
           try {
-            if (!_timer.isActive)
+            if (!isActive)
               return succeed;
             final List<String> files = find(pattern, root: found, recursive: false).toList();
             final bool purgeReally = true;
