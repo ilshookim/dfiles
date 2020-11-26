@@ -2,6 +2,18 @@
 
 delete cache utility with dart language.
 
+* 많은 수의 파일이 폴더에 남으면 운영체제가 느려지고 심각한 경우에 중지가 될 수가 있습니다.
+
+* 디캐쉬를 활용하면 지정한 경로와 하위 경로를 모두 감시하고
+지정한 수 보다 파일이 많아지면 오래된 순으로 삭제하는 서비스를 제공할 수 있습니다.
+
+* 디캐쉬는 파라메터를 지정하여 가볍게 프로세스로 실행할 수 있는 심플한 REST서버입니다.
+
+* 또한 디캐쉬는 감시할 경로를 볼륨으로 마운트하고 도커 컨테이너로 실행할 수 있습니다.
+
+* 그러므로 curl localhost:8088/stop 또는 curl localhost:8088/start와 같은 호출하여
+디캐쉬 서비스를 중지하거나 실행할 수가 있습니다.
+
 # docker
 
 Create a Docker image on your system
