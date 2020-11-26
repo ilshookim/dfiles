@@ -118,7 +118,7 @@ class Purge {
               files.sort((a, b) {
                 final DateTime l = lastModified(a);
                 final DateTime r = lastModified(b);
-                return l.compareTo(r);
+                return r.compareTo(l);
               });
               for (int i=count; i<files.length; i++) {
                 final String file = files[i];
