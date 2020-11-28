@@ -30,7 +30,7 @@ delete cache utility with dart language.
 
 **서비스의 동작**
 
-* 타이머는 REST서버를 통해 /start, /stop, /restart을 통해 제어할 수 있습니다. 그러한 요청의 응답으로 active, running 상태를 확인할 수 있습니다.
+* 타이머는 REST서버를 통해 /start, /stop, /restart을 호출하여 제어할 수 있습니다. 그러한 요청의 응답으로 active, running 상태를 확인할 수 있습니다.
 
 * 타이머가 1초(운영변수)마다 반복하여 삭제를 요구할 것입니다. 타이머는 비동기적인 활동이므로 삭제하는 동안에도 반복적으로 발생할 것입니다.
 
