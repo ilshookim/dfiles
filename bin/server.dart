@@ -27,10 +27,12 @@ void main(List<String> arguments) async {
       ..addOption(Global.portOption, abbr: Global.portAbbrOption)
       ..addOption(Global.rootOption, abbr: Global.rootAbbrOption)
       ..addOption(Global.countOption, abbr: Global.countAbbrOption)
+      ..addOption(Global.periodOption, abbr: Global.periodAbbrOption)
       ..addOption(Global.printAllOption, abbr: Global.printAllAbbrOption);
     final ArgResults argResults = argParser.parse(arguments);
     final String portOption = argResults[Global.portOption] ?? Platform.environment[Global.portEnvOption] ?? Global.defaultPort;
     final String countOption = argResults[Global.countOption] ?? Platform.environment[Global.countEnvOption] ?? Global.defaultCount;
+    final String periodOption = argResults[Global.periodOption] ?? Platform.environment[Global.periodEnvOption] ?? Global.defaultPeriod;
     final String printAllOption = argResults[Global.printAllOption] ?? Platform.environment[Global.printAllEnvOption] ?? Global.defaultPrintAll;
     final String rootOption = argResults[Global.rootOption] ?? Platform.environment[Global.rootEnvOption] ?? Global.defaultRoot;
     final bool rootExists = Directory(rootOption).existsSync();
@@ -38,7 +40,7 @@ void main(List<String> arguments) async {
 
     final String host = Global.defaultHost;
     final int port = int.tryParse(portOption);
-    final Handler handler = API().v1(root: rootMounted, count: int.tryParse(countOption), printAll: printAllOption);
+    final Handler handler = API().v1(root: rootMounted, count: int.tryParse(countOption), period: int.tryParse(periodOption), printAll: printAllOption);
     final HttpServer server = await serve(handler, host, port);
 
     final Map pubspec = await Global.pubspec();
@@ -46,7 +48,7 @@ void main(List<String> arguments) async {
     final String version = pubspec[Global.version];
     final String description = pubspec[Global.description];
     print('$name $version - $description serving at http://${server.address.host}:${server.port}');
-    print('purge monitor to $rootMounted using option: root=$rootOption, count=$countOption, printAll=$printAllOption');
+    print('purge monitor to $rootMounted using options: root=$rootOption, count=$countOption, period=$periodOption, printAll=$printAllOption');
   }
   catch (exc) {
     print('$function: $exc');

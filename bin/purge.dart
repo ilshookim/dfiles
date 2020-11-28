@@ -15,23 +15,14 @@ import 'global.dart';
 class Purge {
   String root = Global.defaultRoot;
   int count = int.tryParse(Global.defaultCount);
+  int period = int.tryParse(Global.defaultPeriod);
   String printAll = Global.defaultPrintAll;
 
   Stopwatch _consume = Stopwatch();
-  Duration _duration = Duration(seconds: 1);
   Timer _timer;
 
-  Purge({Duration duration, bool autostart = false}) {
-    final String function = Trace.current().frames[0].member;
-    try {
-      _duration = duration ?? _duration;
-    }
-    catch (exc) {
-      print('$function: $exc');
-    }
-    finally {
-      if (autostart) start();
-    }
+  Purge({bool autostart = false}) {
+    if (autostart) start();
   }
 
   bool get isActive => _timer != null && _timer.isActive;
@@ -47,7 +38,8 @@ class Purge {
       if (root == null || !rootExists)
         return succeed;
       if (!isActive) {
-        _timer = Timer.periodic(_duration, _periodic);
+        final Duration seconds = Duration(seconds: period);
+        _timer = Timer.periodic(seconds, _periodic);
         succeed = true;
       }
     }
