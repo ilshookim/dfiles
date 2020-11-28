@@ -11,15 +11,17 @@
 /// 
 import 'dart:io';
 
+import 'package:dcli/dcli.dart';
 import 'package:args/args.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
-import 'package:dcli/dcli.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 import 'global.dart';
 import 'api.dart';
 
 void main(List<String> arguments) async {
+  final String function = Trace.current().frames[0].member;
   try {
     final ArgParser argParser = ArgParser()
       ..addOption(Global.portOption, abbr: Global.portAbbrOption)
@@ -47,6 +49,6 @@ void main(List<String> arguments) async {
     print('purge monitor to $rootMounted using option: root=$rootOption, count=$countOption, printAll=$printAllOption');
   }
   catch (exc) {
-    print('main: $exc');
+    print('$function: $exc');
   }
 }

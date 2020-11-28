@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 extension BoolParsing on String {
   bool parseBool() {
@@ -46,6 +47,7 @@ class Global {
   static final String description = 'description';
   
   static Future<Map> pubspec() async {
+    final String function = Trace.current().frames[0].member;
     Map yaml = Map();
     try {
       final String path = join(Global.currentPath, '../$yamlName');
@@ -54,7 +56,7 @@ class Global {
       yaml = loadYaml(text);
     }
     catch (exc) {
-      print('configInfo: $exc');
+      print('$function: $exc');
     }
     return yaml;
   }

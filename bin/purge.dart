@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:dcli/dcli.dart';
 import 'package:dcli/src/functions/is.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 import 'global.dart';
 
@@ -21,11 +22,12 @@ class Purge {
   Timer _timer;
 
   Purge({Duration duration, bool autostart = false}) {
+    final String function = Trace.current().frames[0].member;
     try {
       _duration = duration ?? _duration;
     }
     catch (exc) {
-      print('constructor: $exc');
+      print('$function: $exc');
     }
     finally {
       if (autostart) start();
@@ -36,6 +38,7 @@ class Purge {
   bool get isRunning => _consume.isRunning;
 
   bool start() {
+    final String function = Trace.current().frames[0].member;
     bool succeed = false;
     try {
       if (isRunning)
@@ -49,12 +52,13 @@ class Purge {
       }
     }
     catch (exc) {
-      print('start: $exc');
+      print('$function: $exc');
     }
     return succeed;
   }
 
   bool stop() {
+    final String function = Trace.current().frames[0].member;
     bool succeed = false;
     try {
       if (isActive) {
@@ -63,7 +67,7 @@ class Purge {
       }
     }
     catch (exc) {
-      print('stop: $exc');
+      print('$function: $exc');
     }
     return succeed;
   }
@@ -71,6 +75,7 @@ class Purge {
   void _periodic(Timer timer) {
     if (isRunning)
       return;
+    final String function = Trace.current().frames[0].member;
     int purged = 0;
     try {
       _consume.start();
@@ -78,7 +83,7 @@ class Purge {
       _consume.stop();
     }
     catch (exc) {
-      print('periodic: $exc');
+      print('$function: $exc');
     }
     finally {
       final bool printAllFiles = printAll.parseBool();
@@ -91,6 +96,7 @@ class Purge {
   }
 
   int _purge(String root) {
+    final String function = Trace.current().frames[0].member;
     int purged = 0;
     try {
       final String pattern = '*';
@@ -137,7 +143,7 @@ class Purge {
       }));
     }
     catch (exc) {
-      print('purge: $exc');
+      print('$function: $exc');
     }
     return purged;
   }

@@ -5,6 +5,7 @@
 /// 
 import 'package:path/path.dart';
 import 'package:shelf/shelf.dart';
+import 'package:stack_trace/stack_trace.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_static/shelf_static.dart';
 
@@ -32,6 +33,7 @@ class API {
   }
 
   Handler v1({String root, int count, String printAll}) {
+    final String function = Trace.current().frames[0].member;
     try {
       final String ver1 = "v1";
       router.get(uri('stop'), onStop);
@@ -47,7 +49,7 @@ class API {
       return handler;
     }
     catch (exc) {
-      print('v1: $exc');
+      print('$function: $exc');
     }
     finally {
       purge.root = root ?? purge.root;
