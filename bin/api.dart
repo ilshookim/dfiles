@@ -17,29 +17,88 @@ class API {
   final Router router = Router();
 
   Future<Response> onStop(Request request) async {
-    final bool succeed = purge.stop();
-    final bool running = purge.isRunning;
-    final String message = 'purge: stop=$succeed, running=$running';
-    print(message);
+    final String function = Trace.current().frames[0].member;
+    String message = 'empty';
+    try {
+      final bool succeed = purge.stop();
+      final bool running = purge.isRunning;
+      message = 'purge: stop=$succeed, running=$running';
+    }
+    catch (exc) {
+      message = '$function: $exc';
+    }
+    finally {
+      print(message);
+    }
     return Response.ok(message);
   }
 
   Future<Response> onStart(Request request) async {
-    final bool succeed = purge.start();
-    final bool running = purge.isRunning;
-    final String message = 'purge: start=$succeed, running=$running, root=${purge.root}';
-    print(message);
+    final String function = Trace.current().frames[0].member;
+    String message = 'empty';
+    try {
+      final bool succeed = purge.start();
+      final bool running = purge.isRunning;
+      message = 'purge: start=$succeed, running=$running, period=${purge.period}, root=${purge.root}';
+    }
+    catch (exc) {
+      message = '$function: $exc';
+    }
+    finally {
+      print(message);
+    }
     return Response.ok(message);
   }
 
-  Handler v1({String root, int count, String printAll}) {
+  Future<Response> onRestart(Request request) async {
+    final String function = Trace.current().frames[0].member;
+    String message = 'empty';
+    try {
+      final bool stopped = purge.stop();
+      final bool started = purge.start();
+      final bool running = purge.isRunning;
+      message = 'purge: started=$started, stopped=$stopped, running=$running, period=${purge.period}, root=${purge.root}';
+    }
+    catch (exc) {
+      message = '$function: $exc';
+    }
+    finally {
+      print(message);
+    }
+    return Response.ok(message);
+  }
+
+  Future<Response> onPeriod(Request request, String period) async {
+    final String function = Trace.current().frames[0].member;
+    String message = 'empty';
+    try {
+      final int older = purge.period;
+      final int newly = int.tryParse(period) ?? purge.period;
+      purge.period = newly;
+      message = 'period: old=$older -> new=$newly';
+    }
+    catch (exc) {
+      message = '$function: $exc';
+    }
+    finally {
+      print(message);
+    }
+    return Response.ok(message);
+  }
+
+  Handler v1({String root, int count, int period, String printAll}) {
     final String function = Trace.current().frames[0].member;
     try {
-      final String ver1 = "v1";
       router.get(uri('stop'), onStop);
       router.get(uri('start'), onStart);
+      router.get(uri('restart'), onRestart);
+      router.get(uri('period/<period>'), onPeriod);
+
+      final String ver1 = "v1";
       router.get(uri('stop', version: ver1), onStop);
       router.get(uri('start', version: ver1), onStart);
+      router.get(uri('restart', version: ver1), onRestart);
+      router.get(uri('period/<period>', version: ver1), onPeriod);
 
       final String dcache = join(Global.currentPath, '..', 'dcache');
       final Handler index = createStaticHandler(dcache, defaultDocument: Global.indexName);
@@ -54,6 +113,7 @@ class API {
     finally {
       purge.root = root ?? purge.root;
       purge.count = count ?? purge.count;
+      purge.period = period ?? purge.period;
       purge.printAll = printAll ?? purge.printAll;
       purge.start();
     }

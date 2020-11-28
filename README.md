@@ -70,6 +70,7 @@ $ touch dcache.env <br/>
 $ vi dcache.env <br/>
 DCACHE_PORT=8086 <br/>
 DCACHE_COUNT=5 <br/>
+DCACHE_PERIOD=5 <br/>
 DCACHE_ROOT=/app/dcache/mounted <br/>
 DCACHE_PRINT_ALL=true <br/>
 
