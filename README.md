@@ -20,7 +20,7 @@ delete cache utility with dart language.
 
 # mechanism
 
-* 디캐쉬의 동작은 단순하지만 다양한 프로젝트에 응용할 수 있을 것입니다.
+디캐쉬의 동작은 단순하지만 다양한 프로젝트에 응용할 수 있을 것입니다.
 
 **상태의 확인**
 
