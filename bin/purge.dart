@@ -137,7 +137,7 @@ class Purge {
             succeed = true;
           }
           catch (exc) {
-            print('path: $exc');
+            print('$function: $exc');
           }
           return succeed;
       }));
