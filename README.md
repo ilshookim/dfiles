@@ -54,6 +54,10 @@ delete cache utility with dart language.
 
 * 운영자는 삭제한 파일의 수, 소요한 전체 시간, CPU점유율 등을 고려해서 감시하는 경로에서 적절히 반복할 시간을 정할 수가 있을 것입니다.
 
+# screenshot
+
+![](https://github.com/ilshookim/dcache/blob/master/snapshot/dcache-localhost-snapshot.jpg)
+
 # docker
 
 Create a Docker image on your system
