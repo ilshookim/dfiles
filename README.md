@@ -7,20 +7,20 @@ delete cache (or files) utility with dart language.
 * If you use dcache (called decache similar to decaffein), you can monitor both the monitored path and the sub-path
 If there are more files than the specified count, you can get a service that deletes them in the oldest order.
 
-* Decache is a simple REST server that can be executed lightly as a process by specifying parameters.
+* Dcache is a simple REST server that can be executed lightly as a process by specifying parameters.
 
-* Decache can also mount the local path to be watched as a volume and run it as a docker container.
+* Dcache can also mount the local path to be watched as a volume and run it as a docker container.
 
 * So you can calling something like curl localhost:8088/stop or curl localhost:8088/start,
-You can stop or run the decache service.
+You can stop or run the dcache service.
 
-* Decache is written in the dart language.
+* Dcache is written in the dart language.
 
-* Native performance can be expected because it builds natively in the process of making the decache into a docker image.
+* Native performance can be expected because it builds natively in the process of making the dcache into a docker image.
 
 # mechanism
 
-Decache operation is simple, but it can be applied to various projects.
+Dcache operation is simple, but it can be applied to various projects.
 
 **Check State**
 
