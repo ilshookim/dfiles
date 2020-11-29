@@ -22,7 +22,7 @@ class Global {
   static final String defaultPort = '8088';
   static final String defaultRoot = './dcache/monitor';
   static final String defaultCount = '5000';
-  static final String defaultPeriod = '1';
+  static final String defaultTimer = '1';
   static final String defaultPrintAll = 'false';
   static final String portOption = 'port';
   static final String portAbbrOption = 'p';
@@ -33,9 +33,9 @@ class Global {
   static final String countOption = 'count';
   static final String countAbbrOption = 'c';
   static final String countEnvOption = 'DCACHE_COUNT';
-  static final String periodOption = 'period';
-  static final String periodAbbrOption = 'e';
-  static final String periodEnvOption = 'DCACHE_PERIOD';
+  static final String timerOption = 'timer';
+  static final String timerAbbrOption = 'e';
+  static final String timerEnvOption = 'DCACHE_TIMER';
   static final String printAllOption = 'print';
   static final String printAllAbbrOption = 't';
   static final String printAllEnvOption = 'DCACHE_PRINT_ALL';

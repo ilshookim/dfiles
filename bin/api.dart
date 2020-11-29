@@ -39,7 +39,7 @@ class API {
     try {
       final bool succeed = purge.start();
       final bool running = purge.isRunning;
-      message = 'purge: start=$succeed, running=$running, period=${purge.period}, root=${purge.root}';
+      message = 'purge: start=$succeed, running=$running, timer=${purge.timer}, root=${purge.root}';
     }
     catch (exc) {
       message = '$function: $exc';
@@ -57,7 +57,7 @@ class API {
       final bool stopped = purge.stop();
       final bool started = purge.start();
       final bool running = purge.isRunning;
-      message = 'purge: started=$started, stopped=$stopped, running=$running, period=${purge.period}, root=${purge.root}';
+      message = 'purge: started=$started, stopped=$stopped, running=$running, timer=${purge.timer}, root=${purge.root}';
     }
     catch (exc) {
       message = '$function: $exc';
@@ -68,14 +68,14 @@ class API {
     return Response.ok(message);
   }
 
-  Future<Response> onPeriod(Request request, String period) async {
+  Future<Response> onTimer(Request request, String timer) async {
     final String function = Trace.current().frames[0].member;
     String message = 'empty';
     try {
-      final int older = purge.period;
-      final int newly = int.tryParse(period) ?? purge.period;
-      purge.period = newly;
-      message = 'period: old=$older -> new=$newly';
+      final int older = purge.timer;
+      final int newly = int.tryParse(timer) ?? purge.timer;
+      purge.timer = newly;
+      message = 'timer: old=$older -> new=$newly';
     }
     catch (exc) {
       message = '$function: $exc';
@@ -86,19 +86,19 @@ class API {
     return Response.ok(message);
   }
 
-  Handler v1({String root, int count, int period, String printAll}) {
+  Handler v1({String root, int count, int timer, String printAll}) {
     final String function = Trace.current().frames[0].member;
     try {
       router.get(uri('stop'), onStop);
       router.get(uri('start'), onStart);
       router.get(uri('restart'), onRestart);
-      router.get(uri('period/<period>'), onPeriod);
+      router.get(uri('timer/<timer>'), onTimer);
 
       final String ver1 = "v1";
       router.get(uri('stop', version: ver1), onStop);
       router.get(uri('start', version: ver1), onStart);
       router.get(uri('restart', version: ver1), onRestart);
-      router.get(uri('period/<period>', version: ver1), onPeriod);
+      router.get(uri('timer/<timer>', version: ver1), onTimer);
 
       final String dcache = join(Global.currentPath, '..', 'dcache');
       final Handler index = createStaticHandler(dcache, defaultDocument: Global.indexName);
@@ -113,7 +113,7 @@ class API {
     finally {
       purge.root = root ?? purge.root;
       purge.count = count ?? purge.count;
-      purge.period = period ?? purge.period;
+      purge.timer = timer ?? purge.timer;
       purge.printAll = printAll ?? purge.printAll;
       purge.start();
     }

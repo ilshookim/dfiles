@@ -32,7 +32,7 @@ Dcache operation is simple, but it can be applied to various projects.
 
 * The timer can be controlled by calling /start, /stop, and /restart through the REST server. You can check the active and running status in response to such request.
 
-* The timer will repeatedly request deletion every 1 second (operation variable: DCACHE_PERIOD). The timer is an asynchronous activity, so it will fire event repeatedly during deletion.
+* The timer will repeatedly request deletion every 1 second (operation variable: DCACHE_TIMER). The timer is an asynchronous activity, so it will fire event repeatedly during deletion.
 
 * The timer repeats every second, but if the deletion is still in progress, it does not request for deletion and passes. The timer can be set in seconds.
 
@@ -78,7 +78,7 @@ $ touch dcache.env <br/>
 $ vi dcache.env <br/>
 DCACHE_PORT=8086 <br/>
 DCACHE_COUNT=5 <br/>
-DCACHE_PERIOD=5 <br/>
+DCACHE_TIMER=3 <br/>
 DCACHE_ROOT=/app/dcache/mounted <br/>
 DCACHE_PRINT_ALL=true <br/>
 
@@ -142,7 +142,7 @@ $ docker image rm dcache
 
 * 타이머는 REST서버를 통해 /start, /stop, /restart을 호출하여 제어할 수 있습니다. 그러한 요청의 응답으로 active, running 상태를 확인할 수 있습니다.
 
-* 타이머가 1초(운영변수: DCACHE_PERIOD)마다 반복하여 삭제를 요구할 것입니다. 타이머는 비동기적인 활동이므로 삭제하는 동안에도 반복적으로 발생할 것입니다.
+* 타이머가 1초(운영변수: DCACHE_TIMER)마다 반복하여 삭제를 요구할 것입니다. 타이머는 비동기적인 활동이므로 삭제하는 동안에도 반복적으로 발생할 것입니다.
 
 * 타이머는 1초마다 반복하지만 아직 삭제를 하는 중이면 삭제를 요구하지 않고 그냥 지나갑니다. 타이머는 초 단위로 설정을 할 수 있습니다.
 

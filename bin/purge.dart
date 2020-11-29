@@ -15,7 +15,7 @@ import 'global.dart';
 class Purge {
   String root = Global.defaultRoot;
   int count = int.tryParse(Global.defaultCount);
-  int period = int.tryParse(Global.defaultPeriod);
+  int timer = int.tryParse(Global.defaultTimer);
   String printAll = Global.defaultPrintAll;
 
   Stopwatch _consume = Stopwatch();
@@ -38,7 +38,7 @@ class Purge {
       if (root == null || !rootExists)
         return succeed;
       if (!isActive) {
-        final Duration seconds = Duration(seconds: period);
+        final Duration seconds = Duration(seconds: timer);
         _timer = Timer.periodic(seconds, _periodic);
         succeed = true;
       }
