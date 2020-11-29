@@ -1,4 +1,4 @@
-# dcache
+# About dcache
 
 delete cache (or files) utility with dart language.
 
@@ -18,11 +18,11 @@ You can stop or run the dcache service.
 
 * Native performance can be expected because it builds natively in the process of making the dcache into a docker image.
 
-# mechanism
+# Mechanism
 
 Dcache operation is simple, but it can be applied to various projects.
 
-**Check State**
+**State Management**
 
 * When the timer is running, it is called active. You can check it with the isActive property.
 
@@ -36,9 +36,9 @@ Dcache operation is simple, but it can be applied to various projects.
 
 * The timer repeats every second, but if the deletion is still in progress, it does not request for deletion and passes. The timer can be set in seconds.
 
-* You can change the cycle of repeating the timer from 1 second to 5 seconds by calling like /period/5 through the REST server.
+* You can change the time of repeating the timer from 1 second to 5 seconds by calling like /period/5 through the REST server.
 
-* If you have changed the cycle of repeating the timer, you will need to restart the service by calling /restart to actually apply it.
+* If you have changed the time of repeating the timer, you will need to restart the service by calling /restart to actually apply it.
 
 **Deletion Flow**
 
@@ -54,11 +54,11 @@ Dcache operation is simple, but it can be applied to various projects.
 
 * The operator will be able to determine the time to repeat appropriately in the monitored path, taking into account the number of files deleted, the total time spent, and CPU usage.
 
-# screenshot
+# Screenshot
 
 ![](https://github.com/ilshookim/dcache/blob/master/snapshot/dcache-localhost-snapshot.jpg)
 
-# docker
+# Docker
 
 Create a Docker image on your system
 
@@ -102,13 +102,13 @@ Remove the image
 
 $ docker image rm dcache
 
-# docker build on docker-machine
+# Docker build on docker-machine
 
 [docker build on docker-machine for macOS](https://github.com/ilshookim/dcache/blob/master/docker-machine.md)
 
 ---
 
-# korean
+# Korean
 
 캐쉬 (또는 파일)을 삭제하는 유틸리티를 다트 언어(dart langauge)로 작성하였습니다.
 
@@ -132,7 +132,7 @@ $ docker image rm dcache
 
 디캐쉬의 동작은 단순하지만 다양한 프로젝트에 응용할 수 있을 것입니다.
 
-**상태의 확인**
+**상태의 관리**
 
 * 타이머가 동작을 하는 중이면 active라고 부릅니다. isActive 프로퍼티로 확인을 할 수 있을 것입니다.
 
@@ -146,9 +146,9 @@ $ docker image rm dcache
 
 * 타이머는 1초마다 반복하지만 아직 삭제를 하는 중이면 삭제를 요구하지 않고 그냥 지나갑니다. 타이머는 초 단위로 설정을 할 수 있습니다.
 
-* REST서버를 통해 /period/5 와 같이 호출하여 타이머에 반복하는 주기를 1초에서 5초로 변경을 할 수 있습니다.
+* REST서버를 통해 /period/5 와 같이 호출하여 타이머에 반복하는 시간을 1초에서 5초로 변경을 할 수 있습니다.
 
-* 서비스가 동작하는 도중에 타이머를 반복하는 주기를 변경하였다면 실제로 변경한 주기를 적용하기 위해서는 /restart를 호출하여 서비스를 다시 시작해야 할 것입니다.
+* 타이머를 반복하는 시간를 변경하였다면 실제로 그것을 적용하기 위해서는 /restart를 호출하여 서비스를 다시 시작해야 할 것입니다.
 
 **삭제의 동작**
 
