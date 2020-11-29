@@ -1,58 +1,58 @@
 # dcache
 
-delete cache utility with dart language.
+delete cache (or files) utility with dart language.
 
-* 많은 수의 파일이 폴더에 남으면 운영체제가 느려지고 심각한 경우에 중지가 될 수 있습니다.
+* Storing a large number of files in a folder can slow down the operating system and, in severe cases, hang.
 
-* 디캐쉬를 활용하면 감시하는 경로와 하위 경로를 모두 감시하고
-지정한 수 보다 파일이 많아지면 오래된 순으로 삭제하는 서비스를 제공받을 수 있습니다.
+* If you use dcache (called decache similar to decaffein), you can monitor both the monitored path and the sub-path
+If there are more files than the specified count, you can get a service that deletes them in the oldest order.
 
-* 디캐쉬는 파라메터를 지정하여 가볍게 프로세스로 실행할 수 있는 심플한 REST서버입니다.
+* Decache is a simple REST server that can be executed lightly as a process by specifying parameters.
 
-* 또한 디캐쉬는 감시할 경로를 볼륨으로 마운트하고 도커 컨테이너로 실행할 수 있습니다.
+* Decache can also mount the local path to be watched as a volume and run it as a docker container.
 
-* 그러므로 curl localhost:8088/stop 또는 curl localhost:8088/start와 같은 호출하여
-디캐쉬 서비스를 중지하거나 실행할 수가 있습니다.
+* So you can calling something like curl localhost:8088/stop or curl localhost:8088/start,
+You can stop or run the decache service.
 
-* 디캐쉬는 다트 언어(dart language)로 작성되었습니다.
+* Decache is written in the dart language.
 
-* 디캐쉬를 도커 이미지로 만드는 과정에서 네이티브로 빌드를 하기 때문에 네이티브 성능을 기대할 수가 있습니다.
+* Native performance can be expected because it builds natively in the process of making the decache into a docker image.
 
 # mechanism
 
-디캐쉬의 동작은 단순하지만 다양한 프로젝트에 응용할 수 있을 것입니다.
+Decache operation is simple, but it can be applied to various projects.
 
-**상태의 확인**
+**Check State**
 
-* 타이머가 동작을 하는 중이면 active라고 부릅니다. isActive 프로퍼티로 확인을 할 수 있을 것입니다.
+* When the timer is running, it is called active. You can check it with the isActive property.
 
-* 삭제를 하는 중이면 running이라고 부릅니다. isRunning 프로퍼티로 확인을 할 수 있을 것입니다.
+* If deletion is in progress, it is called running. You can check it with the isRunning property.
 
-**서비스의 동작**
+**Timer Service**
 
-* 타이머는 REST서버를 통해 /start, /stop, /restart을 호출하여 제어할 수 있습니다. 그러한 요청의 응답으로 active, running 상태를 확인할 수 있습니다.
+* The timer can be controlled by calling /start, /stop, and /restart through the REST server. You can check the active and running status in response to such request.
 
-* 타이머가 1초(운영변수: DCACHE_PERIOD)마다 반복하여 삭제를 요구할 것입니다. 타이머는 비동기적인 활동이므로 삭제하는 동안에도 반복적으로 발생할 것입니다.
+* The timer will repeatedly request deletion every 1 second (operation variable: DCACHE_PERIOD). The timer is an asynchronous activity, so it will fire event repeatedly during deletion.
 
-* 타이머는 1초마다 반복하지만 아직 삭제를 하는 중이면 삭제를 요구하지 않고 그냥 지나갑니다. 타이머는 초 단위로 설정을 할 수 있습니다.
+* The timer repeats every second, but if the deletion is still in progress, it does not request for deletion and passes. The timer can be set in seconds.
 
-* REST서버를 통해 /period/5 와 같이 호출하여 타이머에 반복하는 주기를 1초에서 5초로 변경을 할 수 있습니다.
+* You can change the cycle of repeating the timer from 1 second to 5 seconds by calling like /period/5 through the REST server.
 
-* 서비스가 동작하는 도중에 타이머를 반복하는 주기를 변경하였다면 실제로 변경한 주기를 적용하기 위해서는 /restart를 호출하여 서비스를 다시 시작해야 할 것입니다.
+* If you have changed the cycle of repeating the timer, you will need to restart the service by calling /restart to actually apply it.
 
-**삭제의 동작**
+**Deletion Flow**
 
-* 감시할 경로가 복잡하고 파일의 수가 많을 수록 삭제하는 시간이 길어질 것입니다. 그러한 과정은 예상보다 오래 걸릴 수가 있고 CPU점유율을 높일 수가 있습니다.
+* The more complicated the path to be monitored and the larger the number of files, the longer the deletion time will be. Such a process can take longer than expected and can increase CPU usage.
 
-* 감시하는 경로(운영변수: DCACHE_ROOT)에서 폴더의 목록을 읽습니다. 감시하는 경로를 포함하여 모든 하위 경로에서 이와 같은 동일한 실행을 할 것입니다.
+* Read the list of folders from the monitored path (operating variable: DCACHE_ROOT). We will do the same thing like this on all subpaths, including the one we watch.
 
-* 폴더에 있을 파일이 지정한 파일수(운영변수: DCACHE_COUNT) 보다 많은 경우에 실제로 삭제를 시작합니다. 폴더 마다 파일의 수를 확인하는 것은 단순할 것 같지만 파일의 수가 많으면 예상보다 CPU점유율을 높일 수가 있습니다.
+* When the number of files in the folder exceeds the specified count of files (operation variable: DCACHE_COUNT), deletion is actually started. It seems simple to check the number of files in each folder, but if the number of files is large, the CPU usage can be higher than expected.
 
-* 폴더에 있을 전체 파일 목록을 읽고 수정일시(modified time)을 활용해 다시 정렬(sort)한 목록을 만듭니다. 그리고 지정한 파일수(운영변수: DCACHE_COUNT) 이상은 이제 실제로 파일을 삭제할 것입니다.
+* It reads a list of all files in the folder and creates a sorted list using the modified time. And more than the specified count of files (operating variable: DCACHE_COUNT) will now actually delete the files.
 
-* 삭제한 파일에 대한 정보를 출력하고, 마지막으로 삭제한 파일수와 삭제를 위해 소요한 전체 시간을 출력(운영변수: DCACHE_PRINT_ALL)합니다. 도커에서 실행을 한 경우에 docker logs -t -f dcache 명령어를 통해 확인을 할 수 있을 것입니다.
+* It prints information about deleted files, and prints the number of files deleted last and the total time spent for deletion (operation variable: DCACHE_PRINT_ALL). If you run it in Docker, you can check it with the docker logs -t -f dcache command.
 
-* 운영자는 삭제한 파일의 수, 소요한 전체 시간, CPU점유율 등을 고려해서 감시하는 경로에서 적절히 반복할 시간을 정할 수가 있을 것입니다.
+* The operator will be able to determine the time to repeat appropriately in the monitored path, taking into account the number of files deleted, the total time spent, and CPU usage.
 
 # screenshot
 
@@ -105,3 +105,61 @@ $ docker image rm dcache
 # docker build on docker-machine
 
 [docker build on docker-machine for macOS](https://github.com/ilshookim/dcache/blob/master/docker-machine.md)
+
+---
+
+# korean
+
+캐쉬 (또는 파일)을 삭제하는 유틸리티를 다트 언어(dart langauge)로 작성하였습니다.
+
+* 많은 수의 파일이 폴더에 남으면 운영체제가 느려지고 심각한 경우에 중지가 될 수 있습니다.
+
+* 디캐쉬를 활용하면 감시하는 경로와 하위 경로를 모두 감시하고
+지정한 수 보다 파일이 많아지면 오래된 순으로 삭제하는 서비스를 제공받을 수 있습니다.
+
+* 디캐쉬는 파라메터를 지정하여 가볍게 프로세스로 실행할 수 있는 심플한 REST서버입니다.
+
+* 또한 디캐쉬는 감시할 경로를 볼륨으로 마운트하고 도커 컨테이너로 실행할 수 있습니다.
+
+* 그러므로 curl localhost:8088/stop 또는 curl localhost:8088/start와 같은 호출하여
+디캐쉬 서비스를 중지하거나 실행할 수가 있습니다.
+
+* 디캐쉬는 다트 언어(dart language)로 작성하였습니다.
+
+* 디캐쉬를 도커 이미지로 만드는 과정에서 네이티브로 빌드를 하기 때문에 네이티브 성능을 기대할 수가 있습니다.
+
+# 동작방식
+
+디캐쉬의 동작은 단순하지만 다양한 프로젝트에 응용할 수 있을 것입니다.
+
+**상태의 확인**
+
+* 타이머가 동작을 하는 중이면 active라고 부릅니다. isActive 프로퍼티로 확인을 할 수 있을 것입니다.
+
+* 삭제를 하는 중이면 running이라고 부릅니다. isRunning 프로퍼티로 확인을 할 수 있을 것입니다.
+
+**타이머의 동작**
+
+* 타이머는 REST서버를 통해 /start, /stop, /restart을 호출하여 제어할 수 있습니다. 그러한 요청의 응답으로 active, running 상태를 확인할 수 있습니다.
+
+* 타이머가 1초(운영변수: DCACHE_PERIOD)마다 반복하여 삭제를 요구할 것입니다. 타이머는 비동기적인 활동이므로 삭제하는 동안에도 반복적으로 발생할 것입니다.
+
+* 타이머는 1초마다 반복하지만 아직 삭제를 하는 중이면 삭제를 요구하지 않고 그냥 지나갑니다. 타이머는 초 단위로 설정을 할 수 있습니다.
+
+* REST서버를 통해 /period/5 와 같이 호출하여 타이머에 반복하는 주기를 1초에서 5초로 변경을 할 수 있습니다.
+
+* 서비스가 동작하는 도중에 타이머를 반복하는 주기를 변경하였다면 실제로 변경한 주기를 적용하기 위해서는 /restart를 호출하여 서비스를 다시 시작해야 할 것입니다.
+
+**삭제의 동작**
+
+* 감시할 경로가 복잡하고 파일의 수가 많을 수록 삭제하는 시간이 길어질 것입니다. 그러한 과정은 예상보다 오래 걸릴 수가 있고 CPU점유율을 높일 수가 있습니다.
+
+* 감시하는 경로(운영변수: DCACHE_ROOT)에서 폴더의 목록을 읽습니다. 감시하는 경로를 포함하여 모든 하위 경로에서 이와 같은 동일한 실행을 할 것입니다.
+
+* 폴더에 있을 파일이 지정한 파일수(운영변수: DCACHE_COUNT) 보다 많은 경우에 실제로 삭제를 시작합니다. 폴더 마다 파일의 수를 확인하는 것은 단순할 것 같지만 파일의 수가 많으면 예상보다 CPU점유율을 높일 수가 있습니다.
+
+* 폴더에 있을 전체 파일 목록을 읽고 수정일시(modified time)을 활용해 다시 정렬(sort)한 목록을 만듭니다. 그리고 지정한 파일수(운영변수: DCACHE_COUNT) 이상은 이제 실제로 파일을 삭제할 것입니다.
+
+* 삭제한 파일에 대한 정보를 출력하고, 마지막으로 삭제한 파일수와 삭제를 위해 소요한 전체 시간을 출력(운영변수: DCACHE_PRINT_ALL)합니다. 도커에서 실행을 한 경우에 docker logs -t -f dcache 명령어를 통해 확인을 할 수 있을 것입니다.
+
+* 운영자는 삭제한 파일의 수, 소요한 전체 시간, CPU점유율 등을 고려해서 감시하는 경로에서 적절히 반복할 시간을 정할 수가 있을 것입니다.
