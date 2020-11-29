@@ -36,7 +36,7 @@ Dcache operation is simple, but it can be applied to various projects.
 
 * The timer repeats every second, but if the deletion is still in progress, it does not request for deletion and passes. The timer can be set in seconds.
 
-* You can change the time of repeating the timer from 1 second to 5 seconds by calling like /period/5 through the REST server.
+* You can change the time of repeating the timer from 1 second to 5 seconds by calling like /timer/5 through the REST server.
 
 * If you have changed the time of repeating the timer, you will need to restart the service by calling /restart to actually apply it.
 
@@ -146,7 +146,7 @@ $ docker image rm dcache
 
 * 타이머는 1초마다 반복하지만 아직 삭제를 하는 중이면 삭제를 요구하지 않고 그냥 지나갑니다. 타이머는 초 단위로 설정을 할 수 있습니다.
 
-* REST서버를 통해 /period/5 와 같이 호출하여 타이머에 반복하는 시간을 1초에서 5초로 변경을 할 수 있습니다.
+* REST서버를 통해 /timer/5 와 같이 호출하여 타이머에 반복하는 시간을 1초에서 5초로 변경을 할 수 있습니다.
 
 * 타이머를 반복하는 시간를 변경하였다면 실제로 그것을 적용하기 위해서는 /restart를 호출하여 서비스를 다시 시작해야 할 것입니다.
 
