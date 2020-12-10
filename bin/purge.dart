@@ -97,18 +97,20 @@ class Purge {
         root: root, 
         recursive: true, 
         types: [Find.directory], 
-        progress: Progress((String found) {
+        progress: Progress((String found) async {
           bool succeed = false;
           try {
             if (!isActive)
               return succeed;
-            final List<String> files = find(pattern, root: found, recursive: false).toList();
+            // final List<String> files = find(pattern, root: found, recursive: false).toList();
+            final dir = Directory(found);
+            final files = await dir.list().toList();
             final bool purgeReally = true;
             final bool purgeHere = files.length > count;
             if (printAllFiles) {
               print('> path=$found: files=${files.length}');
               for (int i=0; i<files.length; i++) {
-                final String file = files[i];
+                final String file = files[i].path;
                 print('file[$i]=$file');
               }
             }
@@ -117,12 +119,12 @@ class Purge {
               files.sort((a, b) {
                 // final DateTime l = lastModified(a);
                 // final DateTime r = lastModified(b);
-                final int l = File(a).lastModifiedSync().millisecondsSinceEpoch;
-                final int r = File(b).lastModifiedSync().millisecondsSinceEpoch;
+                final int l = (a as File).lastModifiedSync().millisecondsSinceEpoch;
+                final int r = (b as File).lastModifiedSync().millisecondsSinceEpoch;
                 return r.compareTo(l);
               });
               for (int i=count; i<files.length; i++) {
-                final String file = files[i];
+                final String file = files[i].path;
                 final DateTime datetime = lastModified(file);
                 print('>>> deleted: index=$i, file=$file, datetime=$datetime');
                 if (purgeReally) delete(file);
