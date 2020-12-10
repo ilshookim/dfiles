@@ -115,8 +115,10 @@ class Purge {
             if (purgeHere) {
               print('> too many files in a path: path=$found, files=${files.length}, count=$count');
               files.sort((a, b) {
-                final DateTime l = lastModified(a);
-                final DateTime r = lastModified(b);
+                // final DateTime l = lastModified(a);
+                // final DateTime r = lastModified(b);
+                final int l = File(a).lastModifiedSync().millisecondsSinceEpoch;
+                final int r = File(b).lastModifiedSync().millisecondsSinceEpoch;
                 return r.compareTo(l);
               });
               for (int i=count; i<files.length; i++) {
