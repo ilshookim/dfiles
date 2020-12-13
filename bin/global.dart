@@ -23,6 +23,7 @@ class Global {
   static final String defaultRoot = './dcache/monitor';
   static final String defaultCount = '5000';
   static final String defaultTimer = '1';
+  static final String defaultRootRecursive = 'true';
   static final String defaultPrintAll = 'false';
   static final String portOption = 'port';
   static final String portAbbrOption = 'p';
@@ -36,6 +37,9 @@ class Global {
   static final String timerOption = 'timer';
   static final String timerAbbrOption = 'e';
   static final String timerEnvOption = 'DCACHE_TIMER';
+  static final String rootRecursiveOption = 'recursive';
+  static final String rootRecursiveAbbrOption = 'u';
+  static final String rootRecursiveEnvOption = 'DCACHE_ROOT_RECURSIVE';
   static final String printAllOption = 'print';
   static final String printAllAbbrOption = 't';
   static final String printAllEnvOption = 'DCACHE_PRINT_ALL';

@@ -16,6 +16,7 @@ class Purge {
   String root = Global.defaultRoot;
   int count = int.tryParse(Global.defaultCount);
   int timer = int.tryParse(Global.defaultTimer);
+  String rootRecursive = Global.defaultRootRecursive;
   String printAll = Global.defaultPrintAll;
 
   Stopwatch _consume = Stopwatch();
@@ -71,7 +72,7 @@ class Purge {
     int purged = 0;
     try {
       _consume.start();
-      purged = _purge(root);
+      purged = _purge(root, rootRecursive.parseBool());
       _consume.stop();
     }
     catch (exc) {
@@ -87,58 +88,67 @@ class Purge {
     }
   }
 
-  int _purge(String root) {
+  int _purge(String root, bool rootRecursive) {
     final String function = Trace.current().frames[0].member;
     int purged = 0;
     try {
+      final String pattern = '*';
       final bool printAllFiles = printAll.parseBool();
-      
-      List<Directory> directories = [];
-      for (var file in Directory(root).listSync()) {
-        if (file is Directory) {
-          directories.add(file);
-        }
-      }
-    
-      for (var found in directories) {
-        try {
-          if (!isActive)
-            return purged;
-          final files = found.listSync();
-          final bool purgeReally = true;
-          final bool purgeHere = files.length > count;
-          if (printAllFiles) {
-            print('> path=$found: files=${files.length}');
-            for (int i=0; i<files.length; i++) {
-              final String file = files[i].path;
-              print('file[$i]=$file');
+      find(pattern, 
+        root: root, 
+        recursive: rootRecursive, 
+        types: [Find.directory], 
+        progress: Progress((String found) {
+          bool succeed = false;
+          try {
+            if (!isActive)
+              return succeed;
+            final bool recursive = false;
+            final bool followLinks = false;
+            final List<FileSystemEntity> files = Directory(root).listSync(
+              recursive: recursive,
+              followLinks: followLinks,
+            );
+            final bool purgeReally = true;
+            final bool purgeHere = files.length > count;
+            if (printAllFiles) {
+              print('> path=$found: files=${files.length}');
+              for (int i=0; i<files.length; i++) {
+                final String file = files[i].path;
+                print('file[$i]=$file');
+              }
             }
-          }
-          if (purgeHere) {
-            print('> too many files in a path: path=$found, files=${files.length}, count=$count');
-            files.sort((a, b) {
-              final int l = (a as File).lastModifiedSync().millisecondsSinceEpoch;
-              final int r = (b as File).lastModifiedSync().millisecondsSinceEpoch;
-              return r.compareTo(l);
-            });
-            for (int i=count; i<files.length; i++) {
-              final String file = files[i].path;
-              final DateTime datetime = lastModified(file);
-              print('>>> deleted: index=$i, file=$file, datetime=$datetime');
-              if (purgeReally) delete(file);
+            if (purgeHere) {
+              print('> too many files in a path: path=$found, files=${files.length}, count=$count');
+              files.sort((a, b) {
+                final int l = (a as File).lastModifiedSync().millisecondsSinceEpoch;
+                final int r = (b as File).lastModifiedSync().millisecondsSinceEpoch;
+                return r.compareTo(l);
+              });
+              for (int i=count; i<files.length; i++) {
+                final String file = files[i].path;
+                final DateTime datetime = lastModified(file);
+                print('>>> deleted: index=$i, file=$file, datetime=$datetime');
+                if (purgeReally) delete(file);
+              }
+              eventLoops();
             }
+            succeed = true;
           }
-          purged = 1;
-        }
-        catch (exc) {
-          print('$function: $exc');
-        }
-        return purged;
-      }
+          catch (exc) {
+            print('$function: $exc');
+          }
+          return succeed;
+        }),
+      );
     }
     catch (exc) {
       print('$function: $exc');
     }
     return purged;
+  }
+
+  Future eventLoops() {
+    return Future.delayed(Duration.zero);
   }
 }

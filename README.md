@@ -44,7 +44,9 @@ Dcache operation is simple, but it can be applied to various projects.
 
 * The more complicated the path to be monitored and the larger the number of files, the longer the deletion time will be. Such a process can take longer than expected and can increase CPU usage.
 
-* Read the list of folders from the monitored path (operating variable: DCACHE_ROOT). We will do the same thing like this on all subpaths, including the one we watch.
+* Read the list of folders from the monitored path (operating variable: DCACHE_ROOT). Basically we will do the same thing like this on all subpaths, including the one we watch.
+
+* If necessary, the list of folders is read from the monitored path, but sub paths can be excluded (operating variable: DCACHE_ROOT_RECURSIVE).
 
 * When the number of files in the folder exceeds the specified count of files (operation variable: DCACHE_COUNT), deletion is actually started. It seems simple to check the number of files in each folder, but if the number of files is large, the CPU usage can be higher than expected.
 
@@ -80,6 +82,7 @@ DCACHE_PORT=8086 <br/>
 DCACHE_COUNT=5 <br/>
 DCACHE_TIMER=3 <br/>
 DCACHE_ROOT=/app/dcache/mounted <br/>
+DCACHE_ROOT_RECURSIVE=false <br/>
 DCACHE_PRINT_ALL=true <br/>
 
 $ docker run -d -it -p 8088:8086 --env-file=dcache.env --name dcache dcache
@@ -154,7 +157,9 @@ $ docker image rm dcache
 
 * 감시할 경로가 복잡하고 파일의 수가 많을 수록 삭제하는 시간이 길어질 것입니다. 그러한 과정은 예상보다 오래 걸릴 수가 있고 CPU점유율을 높일 수가 있습니다.
 
-* 감시하는 경로(운영변수: DCACHE_ROOT)에서 폴더의 목록을 읽습니다. 감시하는 경로를 포함하여 모든 하위 경로에서 이와 같은 동일한 실행을 할 것입니다.
+* 감시하는 경로(운영변수: DCACHE_ROOT)에서 폴더의 목록을 읽습니다. 기본적으로 감시하는 경로를 포함하여 모든 하위 경로에서 이와 같은 동일한 실행을 할 것입니다.
+
+* 필요한 경우에 감시하는 경로에서 폴더의 목록을 읽지만 하위 경로를 제외(운영변수: DCACHE_ROOT_RECURSIVE)할 수 있습니다.
 
 * 폴더에 있을 파일이 지정한 파일수(운영변수: DCACHE_COUNT) 보다 많은 경우에 실제로 삭제를 시작합니다. 폴더 마다 파일의 수를 확인하는 것은 단순할 것 같지만 파일의 수가 많으면 예상보다 CPU점유율을 높일 수가 있습니다.
 

@@ -86,7 +86,7 @@ class API {
     return Response.ok(message);
   }
 
-  Handler v1({String root, int count, int timer, String printAll}) {
+  Handler v1({String root, int count, int timer, String rootRecursive, String printAll}) {
     final String function = Trace.current().frames[0].member;
     try {
       router.get(uri('stop'), onStop);
@@ -114,6 +114,7 @@ class API {
       purge.root = root ?? purge.root;
       purge.count = count ?? purge.count;
       purge.timer = timer ?? purge.timer;
+      purge.rootRecursive = rootRecursive ?? purge.rootRecursive;
       purge.printAll = printAll ?? purge.printAll;
       purge.start();
     }
