@@ -92,7 +92,7 @@ class Purge {
     final String function = Trace.current().frames[0].member;
     int purged = 0;
     try {
-      final String pattern = '*';
+      const String pattern = '*';
       final bool printAllFiles = printAll.parseBool();
       find(pattern, 
         root: root, 
@@ -103,13 +103,13 @@ class Purge {
           try {
             if (!isActive)
               return succeed;
-            final bool recursive = false;
-            final bool followLinks = false;
+            const bool recursive = false;
+            const bool followLinks = false;
             final List<FileSystemEntity> files = Directory(root).listSync(
               recursive: recursive,
               followLinks: followLinks,
             );
-            final bool purgeReally = true;
+            const bool purgeReally = true;
             final bool purgeHere = files.length > count;
             if (printAllFiles) {
               print('> path=$found: files=${files.length}');
