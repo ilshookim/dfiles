@@ -131,8 +131,8 @@ class Purge {
                 print('>>> deleted: index=$i, file=$file, datetime=$datetime');
                 if (purgeReally) delete(file);
               }
-              eventLoops();
             }
+            doze();
             succeed = true;
           }
           catch (exc) {
@@ -148,7 +148,9 @@ class Purge {
     return purged;
   }
 
-  Future eventLoops() {
+  Future doze() {
+    // Just enqueue to allow the event queue to process outstanding events 
+    // without additional delay use
     return Future.delayed(Duration.zero);
   }
 }
