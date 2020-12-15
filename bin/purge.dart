@@ -132,11 +132,13 @@ class Purge {
                 if (purgeReally) delete(file);
               }
             }
-            doze();
             succeed = true;
           }
           catch (exc) {
             print('$function: $exc');
+          }
+          finally {
+            Future.delayed(Duration.zero);
           }
           return succeed;
         }),
@@ -145,12 +147,9 @@ class Purge {
     catch (exc) {
       print('$function: $exc');
     }
+    finally {
+      Future.delayed(Duration.zero);
+    }
     return purged;
-  }
-
-  Future doze() {
-    // Just enqueue to allow the event queue to process outstanding events 
-    // without additional delay use
-    return Future.delayed(Duration.zero);
   }
 }
