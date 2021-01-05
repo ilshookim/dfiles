@@ -105,7 +105,7 @@ class Purge {
               return succeed;
             const bool recursive = false;
             const bool followLinks = false;
-            final List<FileSystemEntity> files = Directory(root).listSync(
+            final List<FileSystemEntity> files = Directory(found).listSync(
               recursive: recursive,
               followLinks: followLinks,
             );
