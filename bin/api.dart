@@ -68,6 +68,42 @@ class API {
     return Response.ok(message);
   }
 
+  Future<Response> onDays(Request request, String days) async {
+    final String function = Trace.current().frames[0].member;
+    String message = 'empty';
+    try {
+      final int older = purge.days;
+      final int newly = int.tryParse(days) ?? purge.days;
+      purge.days = newly;
+      message = 'days: old=$older -> new=$newly';
+    }
+    catch (exc) {
+      message = '$function: $exc';
+    }
+    finally {
+      print(message);
+    }
+    return Response.ok(message);
+  }
+
+  Future<Response> onCount(Request request, String count) async {
+    final String function = Trace.current().frames[0].member;
+    String message = 'empty';
+    try {
+      final int older = purge.count;
+      final int newly = int.tryParse(count) ?? purge.count;
+      purge.count = newly;
+      message = 'count: old=$older -> new=$newly';
+    }
+    catch (exc) {
+      message = '$function: $exc';
+    }
+    finally {
+      print(message);
+    }
+    return Response.ok(message);
+  }
+
   Future<Response> onTimer(Request request, String timer) async {
     final String function = Trace.current().frames[0].member;
     String message = 'empty';
@@ -86,18 +122,22 @@ class API {
     return Response.ok(message);
   }
 
-  Handler v1({String root, int count, int timer, String rootRecursive, String printAll}) {
+  Handler v1({String root, int count, int days, int timer, String rootRecursive, String printAll}) {
     final String function = Trace.current().frames[0].member;
     try {
       router.get(uri('stop'), onStop);
       router.get(uri('start'), onStart);
       router.get(uri('restart'), onRestart);
+      router.get(uri('days/<days>'), onDays);
+      router.get(uri('count/<count>'), onCount);
       router.get(uri('timer/<timer>'), onTimer);
 
       final String ver1 = "v1";
       router.get(uri('stop', version: ver1), onStop);
       router.get(uri('start', version: ver1), onStart);
       router.get(uri('restart', version: ver1), onRestart);
+      router.get(uri('days/<days>', version: ver1), onDays);
+      router.get(uri('count/<count>', version: ver1), onCount);
       router.get(uri('timer/<timer>', version: ver1), onTimer);
 
       final String dcache = join(Global.currentPath, Global.dcachePath);
@@ -113,6 +153,7 @@ class API {
     finally {
       purge.root = root ?? purge.root;
       purge.count = count ?? purge.count;
+      purge.days = days ?? purge.days;
       purge.timer = timer ?? purge.timer;
       purge.rootRecursive = rootRecursive ?? purge.rootRecursive;
       purge.printAll = printAll ?? purge.printAll;

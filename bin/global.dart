@@ -9,19 +9,12 @@ import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 import 'package:stack_trace/stack_trace.dart';
 
-extension BoolParsing on String {
-  bool parseBool() {
-    final String lowerCase = this.toLowerCase();
-    if (lowerCase.isEmpty || lowerCase == 'false') return false;
-    return lowerCase == 'true' || lowerCase != '0';
-  }
-}
-
 class Global {
   static final String defaultHost = '0.0.0.0';
   static final String defaultPort = '8088';
   static final String defaultRoot = './dcache/monitor';
   static final String defaultCount = '5000';
+  static final String defaultDays = '0';
   static final String defaultTimer = '1';
   static final String defaultRootRecursive = 'true';
   static final String defaultPrintAll = 'false';
@@ -34,6 +27,9 @@ class Global {
   static final String countOption = 'count';
   static final String countAbbrOption = 'c';
   static final String countEnvOption = 'DCACHE_COUNT';
+  static final String daysOption = 'days';
+  static final String daysAbbrOption = 'd';
+  static final String daysEnvOption = 'DCACHE_DAYS';
   static final String timerOption = 'timer';
   static final String timerAbbrOption = 'e';
   static final String timerEnvOption = 'DCACHE_TIMER';
@@ -68,5 +64,13 @@ class Global {
       print('$function: $exc');
     }
     return yaml;
+  }
+}
+
+extension BoolParsing on String {
+  bool parseBool() {
+    final String lowerCase = this.toLowerCase();
+    if (lowerCase.isEmpty || lowerCase == 'false') return false;
+    return lowerCase == 'true' || lowerCase != '0';
   }
 }
