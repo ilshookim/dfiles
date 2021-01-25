@@ -9,14 +9,6 @@ import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 import 'package:stack_trace/stack_trace.dart';
 
-extension BoolParsing on String {
-  bool parseBool() {
-    final String lowerCase = this.toLowerCase();
-    if (lowerCase.isEmpty || lowerCase == 'false') return false;
-    return lowerCase == 'true' || lowerCase != '0';
-  }
-}
-
 class Global {
   static final String defaultHost = '0.0.0.0';
   static final String defaultPort = '8088';
@@ -72,5 +64,13 @@ class Global {
       print('$function: $exc');
     }
     return yaml;
+  }
+}
+
+extension BoolParsing on String {
+  bool parseBool() {
+    final String lowerCase = this.toLowerCase();
+    if (lowerCase.isEmpty || lowerCase == 'false') return false;
+    return lowerCase == 'true' || lowerCase != '0';
   }
 }

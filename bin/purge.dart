@@ -128,12 +128,30 @@ class Purge {
                 final int r = (b as File).lastModifiedSync().millisecondsSinceEpoch;
                 return r.compareTo(l);
               });
-              int purge = count;
-              for (int i=purge; i<files.length; i++) {
-                final String file = files[i].path;
-                final DateTime datetime = lastModified(file);
-                print('>>> deleted: index=$i, file=$file, datetime=$datetime');
-                if (purgeReally) delete(file);
+              int purged = 0;
+              if (purgeDays) {
+                final DateTime today = DateTime.now();
+                for (int i=files.length-1; i>=0; i--) {
+                  final String file = files[i].path;
+                  final DateTime datetime = lastModified(file);
+                  final Duration difference = today.difference(datetime);
+                  final bool expired = difference.inDays >= days;
+                  if (expired) {
+                    print('>>> deleted: days=${difference.inDays}, file=$file, datetime=$datetime');
+                    if (purgeReally) delete(file);
+                    purged++;
+                  }
+                  else break;
+                }
+              }
+              if (purgeCount) {
+                final int length = files.length - purged;
+                for (int i=count; i<length; i++) {
+                  final String file = files[i].path;
+                  final DateTime datetime = lastModified(file);
+                  print('>>> deleted: index=$i, file=$file, datetime=$datetime');
+                  if (purgeReally) delete(file);
+                }
               }
             }
             succeed = true;
