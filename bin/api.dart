@@ -122,6 +122,24 @@ class API {
     return Response.ok(message);
   }
 
+  Future<Response> onPrintAll(Request request, String printAll) async {
+    final String function = Trace.current().frames[0].member;
+    String message = 'empty';
+    try {
+      final String older = purge.printAll;
+      final String newly = printAll ?? purge.printAll;
+      purge.printAll = newly;
+      message = 'printAll: old=$older -> new=$newly';
+    }
+    catch (exc) {
+      message = '$function: $exc';
+    }
+    finally {
+      print(message);
+    }
+    return Response.ok(message);
+  }
+
   Handler v1({String root, int count, int days, int timer, String rootRecursive, String printAll}) {
     final String function = Trace.current().frames[0].member;
     try {
@@ -131,6 +149,7 @@ class API {
       router.get(uri('days/<days>'), onDays);
       router.get(uri('count/<count>'), onCount);
       router.get(uri('timer/<timer>'), onTimer);
+      router.get(uri('printAll/<printAll>'), onPrintAll);
 
       final String ver1 = "v1";
       router.get(uri('stop', version: ver1), onStop);
@@ -139,6 +158,7 @@ class API {
       router.get(uri('days/<days>', version: ver1), onDays);
       router.get(uri('count/<count>', version: ver1), onCount);
       router.get(uri('timer/<timer>', version: ver1), onTimer);
+      router.get(uri('printAll/<printAll>', version: ver1), onPrintAll);
 
       final String dcache = join(Global.currentPath, Global.dcachePath);
       final Handler index = createStaticHandler(dcache, defaultDocument: Global.indexName);
