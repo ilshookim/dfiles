@@ -88,8 +88,7 @@ class Purge {
       print('$function: $exc');
     }
     finally {
-      final bool printAllFiles = printAll.parseBool();
-      if (printAllFiles) {
+      if (purged > 0) {
         final int consumed = _consume.elapsedMilliseconds;
         print('purge: purged=$purged, consumed=$consumed <- monitor=$monitor, count=$count, days=$days, printAll=$printAll');
       }
@@ -101,7 +100,7 @@ class Purge {
     final String function = Trace.current().frames[0].member;
     int purged = 0;
     try {
-      purgeFiles(monitor);
+      purgeFiles(monitor, root: true);
 
       const String pattern = '*';
       const bool includeHidden = true;
@@ -121,7 +120,7 @@ class Purge {
     return purged;
   }
 
-  bool purgeFiles(String directory) {
+  bool purgeFiles(String directory, {bool root = false}) {
     final String function = Trace.current().frames[0].member;
     bool succeed = false;
     try {
@@ -133,7 +132,7 @@ class Purge {
         followLinks: followLinks,
       );
 
-      if (files.isEmpty) {
+      if (!root && files.isEmpty) {
         try {
           print('>>> deleted: directory=$directory');
           deleteDir(directory);
@@ -148,10 +147,25 @@ class Purge {
       int directories = 0;
       for (int i=0; i<files.length; i++) {
         FileStat stat = files[i].statSync();
-        if (printAllFiles) print('printAllFiles: file=${files[i].path}, type=${stat.type}, modified=${stat.modified}');
-        if (stat.type == FileSystemEntityType.directory) { files.removeAt(i--); directories++; }
+        if (basename(files[i].path) == Global.dsStoreFile) {
+            try {
+              print('>>> deleted: file=${files[i].path}, type=${stat.type}, modified=${stat.modified}');
+              delete(files[i].path);
+              files.removeAt(i--);
+              continue;
+            }
+            catch (exc) {
+              print('$function: $exc');
+            }
+        }
+        else if (printAllFiles)
+          print('printAllFiles: file=${files[i].path}, type=${stat.type}, modified=${stat.modified}');
+        if (stat.type == FileSystemEntityType.directory) {
+          files.removeAt(i--);
+          directories++; 
+        }
       }
-      print('arrage: directory=$directory, files=${files.length}, directories=$directories, count=$count, days=$days');
+      print('${Global.defaultApp}: directory=$directory, files=${files.length}, directories=$directories, count=$count, days=$days');
       
       const bool purgeReally = true;
       final bool purgeDays = days > 0 ? true : false;

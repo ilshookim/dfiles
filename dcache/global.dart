@@ -44,6 +44,7 @@ class Global {
   static final String indexName = 'index.html';
   static final String faviconName = 'favicon.ico';
   static final int exitCodeCommandLineUsageError = 64;
+  static final String dsStoreFile = '.DS_Store';
 
   static final String currentPath = dirname(Platform.script.toFilePath());
   static final String yamlName = 'pubspec.yaml';
