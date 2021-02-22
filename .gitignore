@@ -9,7 +9,7 @@ build/
 doc/api/
 
 # vscode
-.vscode/
+# .vscode/
 
 # MacOS
 .DS_Store
