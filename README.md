@@ -32,11 +32,9 @@ Dcache operation is simple, but it can be applied to various projects.
 
 * The timer can be controlled by calling /start, /stop through the REST server. You can check the active and running status in response to such request.
 
-* If you set the timer to 1 second (operation variable: DCACHE_TIMER), it will repeatedly request deletion every 1 second. The timer is an asynchronous activity, so it will fire repeatedly during deletion.
+* If you set the timer to 1 second (operation variable: DCACHE_TIMER), it will repeatedly request deletion every 1 second. The timer is an asynchronous activity, so it will fire repeatedly during deletion. If the value is set to 0, the deletion is requested once and not repeated.
 
 * Even if the timer repeats every second, if the deletion is still in progress, it does not request deletion and passes. The timer can be set in seconds.
-
-* If the timer is set to 0, it only asks for deletion once and does not repeat.
 
 * You can change the number of files to be deleted from the folder to 7000 by calling /count/7000 through the REST server. The changed result is reflected when the next timer is run.
 
@@ -52,9 +50,9 @@ Dcache operation is simple, but it can be applied to various projects.
 
 * If necessary, the list of folders is read from the monitored path, but sub paths can be excluded (operating variable: DCACHE_MONITOR_RECURSIVE).
 
-* When the number of files in the folder exceeds the specified count of files (operation variable: DCACHE_COUNT), It reads a list of all files in the folder and creates a sorted list using the modified time. And more than the specified count of files (operating variable: DCACHE_COUNT) will now actually delete the files.
+* When the number of files in the folder exceeds the specified count of files (operation variable: DCACHE_COUNT), It reads a list of all files in the folder and creates a sorted list using the modified time. And more than the specified count of files (operating variable: DCACHE_COUNT) will now actually delete the files. If the value is set to 0, the function to delete files by number of files is not used.
 
-* If the files in the folder are older than the specified days (operation variable: DCACHE_DAYS), the files will be deleted.
+* If the files in the folder are older than the specified days (operation variable: DCACHE_DAYS), the files will be deleted. If the value is set to 0, the function to delete files on the specified day is not used.
 
 * It prints information about deleted files, and prints the number of files deleted last and the total time spent for deletion (operation variable: DCACHE_PRINT_ALL). If you run it in Docker, you can check it with the docker logs -t -f dcache command.
 
@@ -150,11 +148,9 @@ $ docker image rm dcache
 
 * 타이머는 REST서버를 통해 /start, /stop을 호출하여 제어할 수 있습니다. 그러한 요청의 응답으로 active, running 상태를 확인할 수 있습니다.
 
-* 타이머를 1초(운영변수: DCACHE_TIMER)로 설정하면 1초마다 반복하여 삭제를 요구할 것입니다. 타이머는 비동기적인 활동이므로 삭제하는 동안에도 반복적으로 발생할 것입니다.
+* 타이머를 1초(운영변수: DCACHE_TIMER)로 설정하면 1초마다 반복하여 삭제를 요구할 것입니다. 타이머는 비동기적인 활동이므로 삭제하는 동안에도 반복적으로 발생할 것입니다. 값을 0으로 설정하면 삭제를 한번 요구하고 반복하지 않습니다.
 
 * 타이머가 1초마다 반복하더라도 아직 삭제를 하는 중이면 삭제를 요구하지 않고 그냥 지나갑니다. 타이머는 초 단위로 설정을 할 수 있습니다.
-
-* 타이머를 0으로 설정하면 한번 만 삭제를 요구하고 반복하지 않습니다.
 
 * REST서버를 통해 /count/7000 과 같이 호출하여 폴더에서 삭제할 파일의 수를 7000개로 변경할 수 있습니다. 다음 타이머를 실행하였을 때 변경한 결과를 반영합니다.
 
@@ -170,9 +166,9 @@ $ docker image rm dcache
 
 * 필요한 경우에 감시하는 경로에서 폴더의 목록을 읽지만 하위 경로를 제외(운영변수: DCACHE_MONITOR_RECURSIVE)할 수 있습니다.
 
-* 폴더에 있을 파일이 지정한 파일수(운영변수: DCACHE_COUNT) 보다 많은 경우에 전체 파일 목록을 읽고 수정일시(modified time)을 활용해 다시 정렬(sort)한 목록을 만듭니다. 그리고 지정한 파일수(운영변수: DCACHE_COUNT) 이상은 이제 실제로 파일을 삭제할 것입니다.
+* 폴더에 있을 파일이 지정한 파일수(운영변수: DCACHE_COUNT) 보다 많은 경우에 전체 파일 목록을 읽고 수정일시(modified time)을 활용해 다시 정렬(sort)한 목록을 만듭니다. 그리고 지정한 파일수(운영변수: DCACHE_COUNT) 이상은 이제 실제로 파일을 삭제할 것입니다. 값을 0으로 지정한 경우 파일수로 파일을 삭제하는 기능을 사용하지 않습니다.
 
-* 폴더에 있을 파일이 지정한 날(운영변수: DCACHE_DAYS) 보다 오래된 경우에 실제로 파일을 삭제할 것입니다.
+* 폴더에 있을 파일이 지정한 날(운영변수: DCACHE_DAYS) 보다 오래된 경우에 실제로 파일을 삭제할 것입니다. 값을 0으로 지정한 경우 지정한 날로 파일을 삭제하는 기능을 사용하지 않습니다.
 
 * 삭제한 파일에 대한 정보를 출력하고, 마지막으로 삭제한 파일수와 삭제를 위해 소요한 전체 시간을 출력(운영변수: DCACHE_PRINT_ALL)합니다. 도커에서 실행을 한 경우에 docker logs -t -f dcache 명령어를 통해 확인을 할 수 있을 것입니다.
 
