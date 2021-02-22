@@ -39,25 +39,7 @@ class API {
     try {
       final bool succeed = purge.start();
       final bool running = purge.isRunning;
-      message = 'purge: start=$succeed, running=$running, timer=${purge.timer}, root=${purge.root}';
-    }
-    catch (exc) {
-      message = '$function: $exc';
-    }
-    finally {
-      print(message);
-    }
-    return Response.ok(message);
-  }
-
-  Future<Response> onRestart(Request request) async {
-    final String function = Trace.current().frames[0].member;
-    String message = 'empty';
-    try {
-      final bool stopped = purge.stop();
-      final bool started = purge.start();
-      final bool running = purge.isRunning;
-      message = 'purge: started=$started, stopped=$stopped, running=$running, timer=${purge.timer}, root=${purge.root}';
+      message = 'purge: start=$succeed, running=$running, timer=${purge.timer}, monitor=${purge.monitor}';
     }
     catch (exc) {
       message = '$function: $exc';
@@ -111,7 +93,11 @@ class API {
       final int older = purge.timer;
       final int newly = int.tryParse(timer) ?? purge.timer;
       purge.timer = newly;
-      message = 'timer: old=$older -> new=$newly';
+
+      final bool stopped = purge.stop();
+      final bool started = purge.start();
+      final bool running = purge.isRunning;
+      message = 'timer: old=$older -> new=$newly, started=$started, stopped=$stopped, running=$running, monitor=${purge.monitor}';
     }
     catch (exc) {
       message = '$function: $exc';
@@ -140,12 +126,11 @@ class API {
     return Response.ok(message);
   }
 
-  Handler v1({String root, int count, int days, int timer, String rootRecursive, String printAll}) {
+  Handler v1({String monitor, int count, int days, int timer, String monitorRecursive, String printAll}) {
     final String function = Trace.current().frames[0].member;
     try {
       router.get(uri('stop'), onStop);
       router.get(uri('start'), onStart);
-      router.get(uri('restart'), onRestart);
       router.get(uri('days/<days>'), onDays);
       router.get(uri('count/<count>'), onCount);
       router.get(uri('timer/<timer>'), onTimer);
@@ -154,15 +139,13 @@ class API {
       final String ver1 = "v1";
       router.get(uri('stop', version: ver1), onStop);
       router.get(uri('start', version: ver1), onStart);
-      router.get(uri('restart', version: ver1), onRestart);
       router.get(uri('days/<days>', version: ver1), onDays);
       router.get(uri('count/<count>', version: ver1), onCount);
       router.get(uri('timer/<timer>', version: ver1), onTimer);
       router.get(uri('printAll/<printAll>', version: ver1), onPrintAll);
 
-      final String dcache = join(Global.currentPath, Global.dcachePath);
-      final Handler index = createStaticHandler(dcache, defaultDocument: Global.indexName);
-      final Handler favicon = createStaticHandler(dcache, defaultDocument: Global.faviconName);
+      final Handler index = createStaticHandler(Global.currentPath, defaultDocument: Global.indexName);
+      final Handler favicon = createStaticHandler(Global.currentPath, defaultDocument: Global.faviconName);
       final Handler cascade = Cascade().add(index).add(favicon).add(router.handler).handler;
       final Handler handler = Pipeline().addMiddleware(logRequests()).addHandler(cascade);
       return handler;
@@ -171,11 +154,11 @@ class API {
       print('$function: $exc');
     }
     finally {
-      purge.root = root ?? purge.root;
+      purge.monitor = monitor ?? purge.monitor;
       purge.count = count ?? purge.count;
       purge.days = days ?? purge.days;
       purge.timer = timer ?? purge.timer;
-      purge.rootRecursive = rootRecursive ?? purge.rootRecursive;
+      purge.monitorRecursive = monitorRecursive ?? purge.monitorRecursive;
       purge.printAll = printAll ?? purge.printAll;
       purge.start();
     }

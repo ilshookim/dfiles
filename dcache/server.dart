@@ -4,10 +4,8 @@
 /// https://github.com/ilshookim/dcache
 /// 
 /// working directory:
-/// /app                <- working directory
-/// /app/dcache         <- program directory
-/// /app/dcache/monitor <- monitor directory (default)
-/// /app/dcache/mounted <- monitor directory (mounted)
+/// /app         <- working directory
+/// /app/monitor <- monitor directory (default)
 /// 
 import 'dart:io';
 
@@ -25,11 +23,11 @@ void main(List<String> arguments) async {
   try {
     final ArgParser argParser = ArgParser()
       ..addOption(Global.portOption, abbr: Global.portAbbrOption)
-      ..addOption(Global.rootOption, abbr: Global.rootAbbrOption)
       ..addOption(Global.countOption, abbr: Global.countAbbrOption)
       ..addOption(Global.daysOption, abbr: Global.daysAbbrOption)
       ..addOption(Global.timerOption, abbr: Global.timerAbbrOption)
-      ..addOption(Global.rootRecursiveOption, abbr: Global.rootRecursiveAbbrOption)
+      ..addOption(Global.monitorOption, abbr: Global.monitorAbbrOption)
+      ..addOption(Global.monitorRecursiveOption, abbr: Global.monitorRecursiveAbbrOption)
       ..addOption(Global.printAllOption, abbr: Global.printAllAbbrOption);
     final ArgResults argResults = argParser.parse(arguments);
     final String portOption = argResults[Global.portOption] ?? Platform.environment[Global.portEnvOption] ?? Global.defaultPort;
@@ -37,16 +35,14 @@ void main(List<String> arguments) async {
     final String daysOption = argResults[Global.daysOption] ?? Platform.environment[Global.daysEnvOption] ?? Global.defaultDays;
     final String timerOption = argResults[Global.timerOption] ?? Platform.environment[Global.timerEnvOption] ?? Global.defaultTimer;
     final String printAllOption = argResults[Global.printAllOption] ?? Platform.environment[Global.printAllEnvOption] ?? Global.defaultPrintAll;
-    final String rootRecursiveOption = argResults[Global.rootRecursiveOption] ?? Platform.environment[Global.rootRecursiveEnvOption] ?? Global.defaultRootRecursive;
-    final String rootOption = argResults[Global.rootOption] ?? Platform.environment[Global.rootEnvOption] ?? Global.defaultRoot;
-    final bool rootExists = Directory(rootOption).existsSync();
-    final String rootMounted = rootExists ? rootOption : Global.defaultRoot;
+    final String monitorOption = absolute(argResults[Global.monitorOption] ?? Platform.environment[Global.monitorEnvOption] ?? Global.defaultMonitor);
+    final String monitorRecursiveOption = argResults[Global.monitorRecursiveOption] ?? Platform.environment[Global.rootRecursiveEnvOption] ?? Global.defaultRootRecursive;
 
     final String host = Global.defaultHost;
     final int port = int.tryParse(portOption);
     final Handler handler = API().v1(
-      root: rootMounted, 
-      rootRecursive: rootRecursiveOption, 
+      monitor: monitorOption, 
+      monitorRecursive: monitorRecursiveOption, 
       count: int.tryParse(countOption), 
       days: int.tryParse(daysOption), 
       timer: int.tryParse(timerOption), 
@@ -59,7 +55,7 @@ void main(List<String> arguments) async {
     final String version = pubspec[Global.version];
     final String description = pubspec[Global.description];
     print('$name $version - $description serving at http://${server.address.host}:${server.port}');
-    print('purge monitor to $rootMounted using options: root=$rootOption, count=$countOption, days=$daysOption, timer=$timerOption, recursive=$rootRecursiveOption, printAll=$printAllOption');
+    print('options: monitor=$monitorOption, count=$countOption, days=$daysOption, timer=$timerOption, recursive=$monitorRecursiveOption, printAll=$printAllOption');
   }
   catch (exc) {
     print('$function: $exc');

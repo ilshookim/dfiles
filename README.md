@@ -30,11 +30,13 @@ Dcache operation is simple, but it can be applied to various projects.
 
 **Timer Service**
 
-* The timer can be controlled by calling /start, /stop, and /restart through the REST server. You can check the active and running status in response to such request.
+* The timer can be controlled by calling /start, /stop through the REST server. You can check the active and running status in response to such request.
 
-* The timer will repeatedly request deletion every 1 second (operation variable: DCACHE_TIMER). The timer is an asynchronous activity, so it will fire event repeatedly during deletion.
+* If you set the timer to 1 second (operation variable: DCACHE_TIMER), it will repeatedly request deletion every 1 second. The timer is an asynchronous activity, so it will fire repeatedly during deletion.
 
-* The timer repeats every second, but if the deletion is still in progress, it does not request for deletion and passes. The timer can be set in seconds.
+* Even if the timer repeats every second, if the deletion is still in progress, it does not request deletion and passes. The timer can be set in seconds.
+
+* If the timer is set to 0, it only asks for deletion once and does not repeat.
 
 * You can change the number of files to be deleted from the folder to 7000 by calling /count/7000 through the REST server. The changed result is reflected when the next timer is run.
 
@@ -42,15 +44,13 @@ Dcache operation is simple, but it can be applied to various projects.
 
 * You can change the time of repeating the timer to 5 seconds by calling like /timer/5 through the REST server.
 
-* If you have changed the time of repeating the timer, you will need to restart the service by calling /restart to actually apply it.
-
 **Deletion Flow**
 
 * The more complicated the path to be monitored and the larger the number of files, the longer the deletion time will be. Such a process can take longer than expected and can increase CPU usage.
 
-* Read the list of folders from the monitored path (operating variable: DCACHE_ROOT). Basically we will do the same thing like this on all subpaths, including the one we watch.
+* Read the list of folders from the monitored path (operating variable: DCACHE_MONITOR). Basically we will do the same thing like this on all subpaths, including the one we watch.
 
-* If necessary, the list of folders is read from the monitored path, but sub paths can be excluded (operating variable: DCACHE_ROOT_RECURSIVE).
+* If necessary, the list of folders is read from the monitored path, but sub paths can be excluded (operating variable: DCACHE_MONITOR_RECURSIVE).
 
 * When the number of files in the folder exceeds the specified count of files (operation variable: DCACHE_COUNT), It reads a list of all files in the folder and creates a sorted list using the modified time. And more than the specified count of files (operating variable: DCACHE_COUNT) will now actually delete the files.
 
@@ -78,7 +78,7 @@ Time how long it takes to lauch a server
 
 $ time docker run -it -p 8088:8088 --name dcache dcache
 
-The server using default root changed from invalid DCACHE_ROOT
+The server using default root changed from invalid DCACHE_MONITOR
 
 $ touch dcache.env <br/>
 $ vi dcache.env <br/>
@@ -86,17 +86,17 @@ DCACHE_PORT=8086 <br/>
 DCACHE_COUNT=5 <br/>
 DCACHE_DAYS=10 <br/>
 DCACHE_TIMER=3 <br/>
-DCACHE_ROOT=/app/dcache/mounted <br/>
-DCACHE_ROOT_RECURSIVE=false <br/>
+DCACHE_MONITOR=/app/monitor <br/>
+DCACHE_MONITOR_RECURSIVE=false <br/>
 DCACHE_PRINT_ALL=true <br/>
 
 $ docker run -d -it -p 8088:8086 --env-file=dcache.env --name dcache dcache
 
-The server using volume mounted DCACHE_ROOT for ~/mounted
+The server using volume mounted DCACHE_MONITOR for ~/monitor
 
-$ mkdir ~/mounted
+$ mkdir ~/monitor
 
-$ docker run -d -it -p 8088:8086 --env-file=dcache.env -v ~/mounted:/app/dcache/mounted --name dcache dcache
+$ docker run -d -it -p 8088:8086 --env-file=dcache.env -v ~/monitor:/app/monitor --name dcache dcache
 
 Watch logs such as tail
 
@@ -148,11 +148,13 @@ $ docker image rm dcache
 
 **타이머의 동작**
 
-* 타이머는 REST서버를 통해 /start, /stop, /restart을 호출하여 제어할 수 있습니다. 그러한 요청의 응답으로 active, running 상태를 확인할 수 있습니다.
+* 타이머는 REST서버를 통해 /start, /stop을 호출하여 제어할 수 있습니다. 그러한 요청의 응답으로 active, running 상태를 확인할 수 있습니다.
 
-* 타이머가 1초(운영변수: DCACHE_TIMER)마다 반복하여 삭제를 요구할 것입니다. 타이머는 비동기적인 활동이므로 삭제하는 동안에도 반복적으로 발생할 것입니다.
+* 타이머를 1초(운영변수: DCACHE_TIMER)로 설정하면 1초마다 반복하여 삭제를 요구할 것입니다. 타이머는 비동기적인 활동이므로 삭제하는 동안에도 반복적으로 발생할 것입니다.
 
-* 타이머는 1초마다 반복하지만 아직 삭제를 하는 중이면 삭제를 요구하지 않고 그냥 지나갑니다. 타이머는 초 단위로 설정을 할 수 있습니다.
+* 타이머가 1초마다 반복하더라도 아직 삭제를 하는 중이면 삭제를 요구하지 않고 그냥 지나갑니다. 타이머는 초 단위로 설정을 할 수 있습니다.
+
+* 타이머를 0으로 설정하면 한번 만 삭제를 요구하고 반복하지 않습니다.
 
 * REST서버를 통해 /count/7000 과 같이 호출하여 폴더에서 삭제할 파일의 수를 7000개로 변경할 수 있습니다. 다음 타이머를 실행하였을 때 변경한 결과를 반영합니다.
 
@@ -160,15 +162,13 @@ $ docker image rm dcache
 
 * REST서버를 통해 /timer/5 와 같이 호출하여 타이머에 반복하는 시간을 5초로 변경을 할 수 있습니다.
 
-* 타이머를 반복하는 시간를 변경하였다면 실제로 그것을 적용하기 위해서는 /restart를 호출하여 서비스를 다시 시작해야 할 것입니다.
-
 **삭제의 동작**
 
 * 감시할 경로가 복잡하고 파일의 수가 많을 수록 삭제하는 시간이 길어질 것입니다. 그러한 과정은 예상보다 오래 걸릴 수가 있고 CPU점유율을 높일 수가 있습니다.
 
-* 감시하는 경로(운영변수: DCACHE_ROOT)에서 폴더의 목록을 읽습니다. 기본적으로 감시하는 경로를 포함하여 모든 하위 경로에서 이와 같은 동일한 실행을 할 것입니다.
+* 감시하는 경로(운영변수: DCACHE_MONITOR)에서 폴더의 목록을 읽습니다. 기본적으로 감시하는 경로를 포함하여 모든 하위 경로에서 이와 같은 동일한 실행을 할 것입니다.
 
-* 필요한 경우에 감시하는 경로에서 폴더의 목록을 읽지만 하위 경로를 제외(운영변수: DCACHE_ROOT_RECURSIVE)할 수 있습니다.
+* 필요한 경우에 감시하는 경로에서 폴더의 목록을 읽지만 하위 경로를 제외(운영변수: DCACHE_MONITOR_RECURSIVE)할 수 있습니다.
 
 * 폴더에 있을 파일이 지정한 파일수(운영변수: DCACHE_COUNT) 보다 많은 경우에 전체 파일 목록을 읽고 수정일시(modified time)을 활용해 다시 정렬(sort)한 목록을 만듭니다. 그리고 지정한 파일수(운영변수: DCACHE_COUNT) 이상은 이제 실제로 파일을 삭제할 것입니다.
 

@@ -5,15 +5,15 @@ COPY pubspec.* /app/
 RUN dart pub get
 COPY . /app
 RUN dart pub get --offline
-RUN dart compile exe /app/bin/server.dart -o /app/dcache/dcache
+RUN dart compile exe /app/dcache/server.dart -o /app/bin/dcache
 
 FROM subfuzion/dart-scratch
 COPY --from=0 /app/pubspec.yaml /app/pubspec.yaml
-COPY --from=0 /app/dcache/dart.png /app/dcache/dart.png
-COPY --from=0 /app/dcache/favicon.ico /app/dcache/favicon.ico
-COPY --from=0 /app/dcache/index.html /app/dcache/index.html
-COPY --from=0 /app/dcache/dcache /app/dcache/dcache
-COPY --from=0 /app/dcache/monitor/monitor.md /app/dcache/monitor/monitor.md
+COPY --from=0 /app/bin/dcache /app/dcache
+COPY --from=0 /app/bin/dart.png /app/dart.png
+COPY --from=0 /app/bin/index.html /app/index.html
+COPY --from=0 /app/bin/favicon.ico /app/favicon.ico
+COPY --from=0 /app/bin/monitor/monitor.md /app/monitor/monitor.md
 WORKDIR /app
 EXPOSE 8088
-ENTRYPOINT ["/app/dcache/dcache"]
+ENTRYPOINT ["/app/dcache"]

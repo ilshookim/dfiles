@@ -4,5 +4,5 @@ delete cache utility with dart language.
 
 # monitor
 
-dcache is default monitoring this directory.
+./monitor is default monitoring this directory.
 
