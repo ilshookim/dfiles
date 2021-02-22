@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "dcache",
-            "program": "dcache/server.dart",
+            "program": "lib/server.dart",
             "request": "launch",
             "type": "dart",
             "args": [
