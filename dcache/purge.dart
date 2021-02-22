@@ -147,18 +147,18 @@ class Purge {
       int directories = 0;
       for (int i=0; i<files.length; i++) {
         FileStat stat = files[i].statSync();
-        if (basename(files[i].path) == Global.dsStoreFile) {
+        final bool purge = basename(files[i].path) == Global.dsStoreFile;
+        if (purge) {
             try {
               print('>>> deleted: file=${files[i].path}, type=${stat.type}, modified=${stat.modified}');
               delete(files[i].path);
               files.removeAt(i--);
-              continue;
             }
             catch (exc) {
               print('$function: $exc');
             }
         }
-        else if (printAllFiles)
+        if (printAllFiles && !purge)
           print('printAllFiles: file=${files[i].path}, type=${stat.type}, modified=${stat.modified}');
         if (stat.type == FileSystemEntityType.directory) {
           files.removeAt(i--);
