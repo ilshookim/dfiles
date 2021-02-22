@@ -90,7 +90,7 @@ class Purge {
     finally {
       if (purged > 0) {
         final int consumed = _consume.elapsedMilliseconds;
-        print('purge: purged=$purged, consumed=$consumed <- monitor=$monitor, count=$count, days=$days, printAll=$printAll');
+        print('PURGED: count=$purged, consumed=$consumed <- monitor=$monitor, count=$count, days=$days, printAll=$printAll');
       }
       _consume.reset();
     }
@@ -100,7 +100,7 @@ class Purge {
     final String function = Trace.current().frames[0].member;
     int purged = 0;
     try {
-      purgeFiles(monitor, root: true);
+      purged += purgeFiles(monitor, root: true);
 
       const String pattern = '*';
       const bool includeHidden = true;
@@ -110,7 +110,7 @@ class Purge {
         includeHidden: includeHidden,
         types: [Find.directory], 
         progress: Progress((String directory) {
-          if (isActive || once) purgeFiles(directory);
+          if (isActive || once) purged += purgeFiles(directory);
         }),
       );
     }
@@ -120,9 +120,9 @@ class Purge {
     return purged;
   }
 
-  bool purgeFiles(String directory, {bool root = false}) {
+  int purgeFiles(String directory, {bool root = false}) {
     final String function = Trace.current().frames[0].member;
-    bool succeed = false;
+    int purged = 0;
     try {
       final bool printAllFiles = printAll.parseBool();
       const bool recursive = false;
@@ -136,12 +136,12 @@ class Purge {
         try {
           print('>>> deleted: directory=$directory');
           deleteDir(directory);
-          succeed = true;
+          purged++;
         }
         catch (exc) {
           print('$function: $exc');
         }
-        return succeed;
+        return purged;
       }
 
       int directories = 0;
@@ -153,6 +153,7 @@ class Purge {
               print('>>> deleted: file=${files[i].path}, type=${stat.type}, modified=${stat.modified}');
               delete(files[i].path);
               files.removeAt(i--);
+              purged++;
             }
             catch (exc) {
               print('$function: $exc');
@@ -165,7 +166,6 @@ class Purge {
           directories++; 
         }
       }
-      print('${Global.defaultApp}: directory=$directory, files=${files.length}, directories=$directories, count=$count, days=$days');
       
       const bool purgeReally = true;
       final bool purgeDays = days > 0 ? true : false;
@@ -178,7 +178,6 @@ class Purge {
           return r.compareTo(l);
         });
 
-        int purged = 0;
         if (purgeDays) {
           final DateTime today = DateTime.now();
           for (int i=files.length-1; i>=0; i--) {
@@ -208,6 +207,7 @@ class Purge {
               final DateTime datetime = lastModified(file);
               print('>>> deleted: index=$i, file=$file, datetime=$datetime');
               if (purgeReally) delete(file);
+              purged++;
             }
             catch (exc) {
               print('$function: $exc');
@@ -216,11 +216,12 @@ class Purge {
         }
       }
 
-      succeed = true;
+      if (purged == 0)
+        print('${Global.defaultApp}: directory=$directory, files=${files.length}, directories=$directories, count=$count, days=$days, printAll=$printAll');
     }
     catch (exc) {
       print('$function: $exc');
     }
-    return succeed;
+    return purged;
   }
 }
