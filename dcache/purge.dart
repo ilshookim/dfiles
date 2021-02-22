@@ -88,11 +88,11 @@ class Purge {
       print('$function: $exc');
     }
     finally {
-      if (purged > 0) {
+      final bool purgeInfo = purged > 0;
+      if (purgeInfo) {
         final int consumed = _consume.elapsedMilliseconds;
         print('PURGED: count=$purged, consumed=$consumed <- monitor=$monitor, count=$count, days=$days, printAll=$printAll');
       }
-      _consume.reset();
     }
   }
 
@@ -216,8 +216,8 @@ class Purge {
         }
       }
 
-      if (purged == 0)
-        print('${Global.defaultApp}: directory=$directory, files=${files.length}, directories=$directories, count=$count, days=$days, printAll=$printAll');
+      final bool purgeInfo = purged == 0;
+      if (purgeInfo) print('${Global.defaultApp}: directory=$directory, files=${files.length}, directories=$directories, count=$count, days=$days, printAll=$printAll');
     }
     catch (exc) {
       print('$function: $exc');
