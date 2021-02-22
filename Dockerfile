@@ -5,7 +5,7 @@ COPY pubspec.* /app/
 RUN dart pub get
 COPY . /app
 RUN dart pub get --offline
-RUN dart compile exe /app/lib/server.dart -o /app/bin/dcache
+RUN dart compile exe /app/dcache/server.dart -o /app/bin/dcache
 
 FROM subfuzion/dart-scratch
 COPY --from=0 /app/pubspec.yaml /app/pubspec.yaml
