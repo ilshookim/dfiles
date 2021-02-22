@@ -37,7 +37,7 @@ class Global {
   static final String monitorRecursiveOption = 'recursive';
   static final String monitorRecursiveAbbrOption = 'u';
   static final String rootRecursiveEnvOption = '${defaultApp}_RECURSIVE';
-  static final String printAllOption = 'print';
+  static final String printAllOption = 'printAll';
   static final String printAllAbbrOption = 't';
   static final String printAllEnvOption = '${defaultApp}_PRINT_ALL';
 
