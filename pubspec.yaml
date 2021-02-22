@@ -17,7 +17,7 @@ dependencies:
 
   # An API and dev environment for writing console (cli) apps/scripts using dart. 
   # e.g. allows you to build bash style scripts with dart.
-  dcli: ^0.34.1
+  dcli: ^0.41.16
 
   # Library for defining parsers for parsing raw command-line arguments into a set of options 
   # and values using GNU and POSIX style options.

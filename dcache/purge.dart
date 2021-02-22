@@ -104,9 +104,11 @@ class Purge {
       purgeFiles(monitor);
 
       const String pattern = '*';
+      const bool includeHidden = true;
       find(pattern, 
-        root: monitor, 
+        workingDirectory: monitor, 
         recursive: monitorRecursive, 
+        includeHidden: includeHidden,
         types: [Find.directory], 
         progress: Progress((String directory) {
           if (isActive || once) purgeFiles(directory);
@@ -131,25 +133,37 @@ class Purge {
         followLinks: followLinks,
       );
 
+      if (files.isEmpty) {
+        try {
+          print('>>> deleted: directory=$directory');
+          deleteDir(directory);
+          succeed = true;
+        }
+        catch (exc) {
+          print('$function: $exc');
+        }
+        return succeed;
+      }
+
       int directories = 0;
       for (int i=0; i<files.length; i++) {
         FileStat stat = files[i].statSync();
         if (printAllFiles) print('printAllFiles: file=${files[i].path}, type=${stat.type}, modified=${stat.modified}');
         if (stat.type == FileSystemEntityType.directory) { files.removeAt(i--); directories++; }
       }
-      print('arrage: directory=$directory, files=${files.length}, directories=$directories');
+      print('arrage: directory=$directory, files=${files.length}, directories=$directories, count=$count, days=$days');
       
       const bool purgeReally = true;
       final bool purgeDays = days > 0 ? true : false;
       final bool purgeCount = count > 0 ? files.length > count : false;
       final bool purgeHere = purgeDays || purgeCount;
       if (purgeHere) {
-        print('> purge here: directory=$directory, files=${files.length}, count=$count, days=$days');
         files.sort((a, b) {
           final int l = (a as File).lastModifiedSync().millisecondsSinceEpoch;
           final int r = (b as File).lastModifiedSync().millisecondsSinceEpoch;
           return r.compareTo(l);
         });
+
         int purged = 0;
         if (purgeDays) {
           final DateTime today = DateTime.now();
@@ -171,6 +185,7 @@ class Purge {
             else break;
           }
         }
+
         if (purgeCount) {
           final int length = files.length - purged;
           for (int i=count; i<length; i++) {
@@ -186,6 +201,7 @@ class Purge {
           }
         }
       }
+
       succeed = true;
     }
     catch (exc) {
