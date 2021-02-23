@@ -35,13 +35,13 @@ void main(List<String> arguments) async {
     final String daysOption = argResults[Global.daysOption] ?? Platform.environment[Global.daysEnvOption] ?? Global.defaultDays;
     final String timerOption = argResults[Global.timerOption] ?? Platform.environment[Global.timerEnvOption] ?? Global.defaultTimer;
     final String printAllOption = argResults[Global.printAllOption] ?? Platform.environment[Global.printAllEnvOption] ?? Global.defaultPrintAll;
-    final String monitorOption = absolute(argResults[Global.monitorOption] ?? Platform.environment[Global.monitorEnvOption] ?? Global.defaultMonitor);
+    final String monitorOption = argResults[Global.monitorOption] ?? Platform.environment[Global.monitorEnvOption] ?? Global.defaultMonitor;
     final String monitorRecursiveOption = argResults[Global.monitorRecursiveOption] ?? Platform.environment[Global.rootRecursiveEnvOption] ?? Global.defaultRootRecursive;
 
     final String host = Global.defaultHost;
     final int port = int.tryParse(portOption);
     final Handler handler = API().v1(
-      monitor: monitorOption, 
+      monitor: absolute(monitorOption), 
       monitorRecursive: monitorRecursiveOption, 
       count: int.tryParse(countOption), 
       days: int.tryParse(daysOption), 
