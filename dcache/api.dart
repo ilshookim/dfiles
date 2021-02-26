@@ -16,7 +16,7 @@ class API {
   final Purge purge = Purge();
   final Router router = Router();
 
-  Future<Response> onStop(Request request) async {
+  Response onStop(Request request) {
     final String function = Trace.current().frames[0].member;
     String message = 'empty';
     try {
@@ -33,7 +33,7 @@ class API {
     return Response.ok(message);
   }
 
-  Future<Response> onStart(Request request) async {
+  Response onStart(Request request) {
     final String function = Trace.current().frames[0].member;
     String message = 'empty';
     try {
@@ -50,7 +50,7 @@ class API {
     return Response.ok(message);
   }
 
-  Future<Response> onDays(Request request, String days) async {
+  Response onDays(Request request, String days) {
     final String function = Trace.current().frames[0].member;
     String message = 'empty';
     try {
@@ -68,7 +68,7 @@ class API {
     return Response.ok(message);
   }
 
-  Future<Response> onCount(Request request, String count) async {
+  Response onCount(Request request, String count) {
     final String function = Trace.current().frames[0].member;
     String message = 'empty';
     try {
@@ -86,7 +86,7 @@ class API {
     return Response.ok(message);
   }
 
-  Future<Response> onTimer(Request request, String timer) async {
+  Response onTimer(Request request, String timer) {
     final String function = Trace.current().frames[0].member;
     String message = 'empty';
     try {
@@ -108,7 +108,7 @@ class API {
     return Response.ok(message);
   }
 
-  Future<Response> onPrintAll(Request request, String printAll) async {
+  Response onPrintAll(Request request, String printAll) {
     final String function = Trace.current().frames[0].member;
     String message = 'empty';
     try {
