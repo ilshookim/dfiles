@@ -1,6 +1,6 @@
 # About dcache
 
-delete cache (or files) utility with dart language.
+delete cache (or files) utility with dart language - supported sound null-safety.
 
 * Storing a large number of files in a folder can slow down the operating system and, in severe cases, hang.
 
@@ -116,7 +116,7 @@ $ docker image rm dcache
 
 # Korean
 
-캐쉬 (또는 파일)을 삭제하는 유틸리티를 다트 언어(dart langauge)로 작성하였습니다.
+캐쉬 (또는 파일)을 삭제하는 유틸리티를 다트 언어(dart langauge)로 작성하였습니다 - null 안정화를 지원.
 
 * 많은 수의 파일이 폴더에 남으면 운영체제가 느려지고 심각한 경우에 중지가 될 수 있습니다.
 
