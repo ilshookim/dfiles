@@ -1,8 +1,8 @@
 /// dcache designed by ilshookim
 /// MIT License
-/// 
+///
 /// https://github.com/ilshookim/dcache
-/// 
+///
 import 'package:path/path.dart';
 import 'package:shelf/shelf.dart';
 import 'package:stack_trace/stack_trace.dart';
@@ -17,77 +17,70 @@ class API {
   final Router router = Router();
 
   Response onStop(Request request) {
-    final String function = Trace.current().frames[0].member;
+    final String function = Trace.current().frames[0].member!;
     String message = 'empty';
     try {
       final bool succeed = purge.stop();
       final bool running = purge.isRunning;
       message = 'purge: stop=$succeed, running=$running';
-    }
-    catch (exc) {
+    } catch (exc) {
       message = '$function: $exc';
-    }
-    finally {
+    } finally {
       print(message);
     }
     return Response.ok(message);
   }
 
   Response onStart(Request request) {
-    final String function = Trace.current().frames[0].member;
+    final String function = Trace.current().frames[0].member!;
     String message = 'empty';
     try {
       final bool succeed = purge.start();
       final bool running = purge.isRunning;
-      message = 'purge: start=$succeed, running=$running, timer=${purge.timer}, monitor=${purge.monitor}';
-    }
-    catch (exc) {
+      message =
+          'purge: start=$succeed, running=$running, timer=${purge.timer}, monitor=${purge.monitor}';
+    } catch (exc) {
       message = '$function: $exc';
-    }
-    finally {
+    } finally {
       print(message);
     }
     return Response.ok(message);
   }
 
   Response onDays(Request request, String days) {
-    final String function = Trace.current().frames[0].member;
+    final String function = Trace.current().frames[0].member!;
     String message = 'empty';
     try {
       final int older = purge.days;
       final int newly = int.tryParse(days) ?? purge.days;
       purge.days = newly;
       message = 'days: old=$older -> new=$newly';
-    }
-    catch (exc) {
+    } catch (exc) {
       message = '$function: $exc';
-    }
-    finally {
+    } finally {
       print(message);
     }
     return Response.ok(message);
   }
 
   Response onCount(Request request, String count) {
-    final String function = Trace.current().frames[0].member;
+    final String function = Trace.current().frames[0].member!;
     String message = 'empty';
     try {
       final int older = purge.count;
       final int newly = int.tryParse(count) ?? purge.count;
       purge.count = newly;
       message = 'count: old=$older -> new=$newly';
-    }
-    catch (exc) {
+    } catch (exc) {
       message = '$function: $exc';
-    }
-    finally {
+    } finally {
       print(message);
     }
     return Response.ok(message);
   }
 
   Response onTimer(Request request, String timer) {
-    final String function = Trace.current().frames[0].member;
+    final String function = Trace.current().frames[0].member!;
     String message = 'empty';
     try {
       final int older = purge.timer;
@@ -97,37 +90,40 @@ class API {
       final bool stopped = purge.stop();
       final bool started = purge.start();
       final bool running = purge.isRunning;
-      message = 'timer: old=$older -> new=$newly, started=$started, stopped=$stopped, running=$running, monitor=${purge.monitor}';
-    }
-    catch (exc) {
+      message =
+          'timer: old=$older -> new=$newly, started=$started, stopped=$stopped, running=$running, monitor=${purge.monitor}';
+    } catch (exc) {
       message = '$function: $exc';
-    }
-    finally {
+    } finally {
       print(message);
     }
     return Response.ok(message);
   }
 
-  Response onPrintAll(Request request, String printAll) {
-    final String function = Trace.current().frames[0].member;
+  Response onPrintAll(Request request, String? printAll) {
+    final String function = Trace.current().frames[0].member!;
     String message = 'empty';
     try {
       final String older = purge.printAll;
       final String newly = printAll ?? purge.printAll;
       purge.printAll = newly;
       message = 'printAll: old=$older -> new=$newly';
-    }
-    catch (exc) {
+    } catch (exc) {
       message = '$function: $exc';
-    }
-    finally {
+    } finally {
       print(message);
     }
     return Response.ok(message);
   }
 
-  Handler v1({String monitor, int count, int days, int timer, String monitorRecursive, String printAll}) {
-    final String function = Trace.current().frames[0].member;
+  Handler v1(
+      {String? monitor,
+      int? count,
+      int? days,
+      int? timer,
+      String? monitorRecursive,
+      String? printAll}) {
+    final String function = Trace.current().frames[0].member!;
     try {
       router.get(uri('stop'), onStop);
       router.get(uri('start'), onStart);
@@ -144,16 +140,18 @@ class API {
       router.get(uri('timer/<timer>', version: ver1), onTimer);
       router.get(uri('printAll/<printAll>', version: ver1), onPrintAll);
 
-      final Handler index = createStaticHandler(Global.currentPath, defaultDocument: Global.indexName);
-      final Handler favicon = createStaticHandler(Global.currentPath, defaultDocument: Global.faviconName);
-      final Handler cascade = Cascade().add(index).add(favicon).add(router.handler).handler;
-      final Handler handler = Pipeline().addMiddleware(logRequests()).addHandler(cascade);
+      final Handler index = createStaticHandler(Global.currentPath,
+          defaultDocument: Global.indexName);
+      final Handler favicon = createStaticHandler(Global.currentPath,
+          defaultDocument: Global.faviconName);
+      final Handler cascade =
+          Cascade().add(index).add(favicon).add(router).handler;
+      final Handler handler =
+          Pipeline().addMiddleware(logRequests()).addHandler(cascade);
       return handler;
-    }
-    catch (exc) {
+    } catch (exc) {
       print('$function: $exc');
-    }
-    finally {
+    } finally {
       purge.monitor = monitor ?? purge.monitor;
       purge.count = count ?? purge.count;
       purge.days = days ?? purge.days;
@@ -168,9 +166,8 @@ class API {
     return defaultHandler;
   }
 
-  String uri(String path, {String version}) {
-    if (version == null)
-      return join('/', path);
+  String uri(String path, {String? version}) {
+    if (version == null) return join('/', path);
     return join('/', version, path);
   }
 }

@@ -4,35 +4,34 @@ version: 1.0.0
 homepage: https://github.com/ilshookim/dcache
 
 environment:
-  sdk: '>=2.8.1 <3.0.0'
-  # sdk: '>=2.12.0-0 <3.0.0'
+  sdk: '>=2.12.0-0 <3.0.0'
 
 dependencies:
   # A package for manipulating stack traces and printing them readably.
-  stack_trace: ^1.9.6
+  stack_trace: ^1.10.0
 
   # A string-based path manipulation library. All of the path operations you know and love, 
   # with solid support for Windows, POSIX (Linux and Mac OS X), and the web.
-  path: ^1.7.0
+  path: ^1.8.0
 
   # An API and dev environment for writing console (cli) apps/scripts using dart. 
   # e.g. allows you to build bash style scripts with dart.
-  dcli: ^0.41.16
+  dcli: ^0.51.2
 
   # Library for defining parsers for parsing raw command-line arguments into a set of options 
   # and values using GNU and POSIX style options.
-  args: ^1.6.0
+  args: ^2.0.0
 
   # A model for web server middleware that encourages composition and easy reuse
-  shelf: ^0.7.9
+  shelf: ^1.0.0
 
   # A convinent request router for the shelf web-framework, with support for URL-parameters, 
   # nested routers and routers generated from source annotations.
-  shelf_router: ^0.7.3
+  shelf_router: ^1.0.0
 
   # Static file server support for Shelf
-  shelf_static: ^0.2.8
+  shelf_static: ^1.0.0
 
 dev_dependencies:
   # The Dart analyzer settings and best practices used internally at Google.
-  pedantic: ^1.9.0
+  pedantic: ^1.11.0
