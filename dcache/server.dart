@@ -31,28 +31,13 @@ void main(List<String> arguments) async {
           abbr: Global.monitorRecursiveAbbrOption)
       ..addOption(Global.printAllOption, abbr: Global.printAllAbbrOption);
     final ArgResults argResults = argParser.parse(arguments);
-    final String portOption = argResults[Global.portOption] ??
-        Platform.environment[Global.portEnvOption] ??
-        Global.defaultPort;
-    final String countOption = argResults[Global.countOption] ??
-        Platform.environment[Global.countEnvOption] ??
-        Global.defaultCount;
-    final String daysOption = argResults[Global.daysOption] ??
-        Platform.environment[Global.daysEnvOption] ??
-        Global.defaultDays;
-    final String timerOption = argResults[Global.timerOption] ??
-        Platform.environment[Global.timerEnvOption] ??
-        Global.defaultTimer;
-    final String printAllOption = argResults[Global.printAllOption] ??
-        Platform.environment[Global.printAllEnvOption] ??
-        Global.defaultPrintAll;
-    final String monitorOption = argResults[Global.monitorOption] ??
-        Platform.environment[Global.monitorEnvOption] ??
-        Global.defaultMonitor;
-    final String monitorRecursiveOption =
-        argResults[Global.monitorRecursiveOption] ??
-            Platform.environment[Global.rootRecursiveEnvOption] ??
-            Global.defaultRootRecursive;
+    final String portOption = argResults[Global.portOption] ?? Platform.environment[Global.portEnvOption] ?? Global.defaultPort;
+    final String countOption = argResults[Global.countOption] ?? Platform.environment[Global.countEnvOption] ?? Global.defaultCount;
+    final String daysOption = argResults[Global.daysOption] ?? Platform.environment[Global.daysEnvOption] ?? Global.defaultDays;
+    final String timerOption = argResults[Global.timerOption] ?? Platform.environment[Global.timerEnvOption] ?? Global.defaultTimer;
+    final String printAllOption = argResults[Global.printAllOption] ?? Platform.environment[Global.printAllEnvOption] ?? Global.defaultPrintAll;
+    final String monitorOption = argResults[Global.monitorOption] ?? Platform.environment[Global.monitorEnvOption] ?? Global.defaultMonitor;
+    final String monitorRecursiveOption = argResults[Global.monitorRecursiveOption] ?? Platform.environment[Global.rootRecursiveEnvOption] ?? Global.defaultRootRecursive;
 
     final String host = Global.defaultHost;
     final int port = int.tryParse(portOption)!;
