@@ -27,8 +27,7 @@ void main(List<String> arguments) async {
       ..addOption(Global.daysOption, abbr: Global.daysAbbrOption)
       ..addOption(Global.timerOption, abbr: Global.timerAbbrOption)
       ..addOption(Global.monitorOption, abbr: Global.monitorAbbrOption)
-      ..addOption(Global.monitorRecursiveOption,
-          abbr: Global.monitorRecursiveAbbrOption)
+      ..addOption(Global.monitorRecursiveOption, abbr: Global.monitorRecursiveAbbrOption)
       ..addOption(Global.printAllOption, abbr: Global.printAllAbbrOption);
     final ArgResults argResults = argParser.parse(arguments);
     final String portOption = argResults[Global.portOption] ?? Platform.environment[Global.portEnvOption] ?? Global.defaultPort;
