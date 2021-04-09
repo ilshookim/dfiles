@@ -83,8 +83,7 @@ class Purge {
       final bool purgeInfo = purged > 0;
       if (purgeInfo) {
         final int consumed = _consume.elapsedMilliseconds;
-        print(
-            'PURGED: count=$purged, consumed=$consumed <- monitor=$monitor, count=$count, days=$days, printAll=$printAll');
+        print(    'PURGED: count=$purged, consumed=$consumed <- monitor=$monitor, count=$count, days=$days, printAll=$printAll');
       }
     }
   }
@@ -143,8 +142,7 @@ class Purge {
         final bool purge = basename(files[i].path) == Global.dsStoreFile;
         if (purge) {
           try {
-            print(
-                '>>> deleted: file=${files[i].path}, type=${stat.type}, modified=${stat.modified}');
+            print(        '>>> deleted: file=${files[i].path}, type=${stat.type}, modified=${stat.modified}');
             delete(files[i].path);
             files.removeAt(i--);
             purged++;
@@ -153,8 +151,7 @@ class Purge {
           }
         }
         if (printAllFiles && !purge)
-          print(
-              'printAllFiles: file=${files[i].path}, type=${stat.type}, modified=${stat.modified}');
+          print(      'printAllFiles: file=${files[i].path}, type=${stat.type}, modified=${stat.modified}');
         if (stat.type == FileSystemEntityType.directory) {
           files.removeAt(i--);
           directories++;
@@ -181,8 +178,7 @@ class Purge {
             final bool expired = difference.inDays >= days;
             if (expired) {
               try {
-                print(
-                    '>>> deleted: days=${difference.inDays}, file=$file, datetime=$datetime');
+                print(            '>>> deleted: days=${difference.inDays}, file=$file, datetime=$datetime');
                 if (purgeReally) delete(file);
                 purged++;
               } catch (exc) {
@@ -211,8 +207,7 @@ class Purge {
 
       final bool purgeInfo = purged == 0;
       if (purgeInfo)
-        print(
-            '${Global.defaultApp}: directory=$directory, files=${files.length}, directories=$directories, count=$count, days=$days, printAll=$printAll');
+        print(    '${Global.defaultApp}: directory=$directory, files=${files.length}, directories=$directories, count=$count, days=$days, printAll=$printAll');
     } catch (exc) {
       print('$function: $exc');
     }

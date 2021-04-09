@@ -54,10 +54,8 @@ void main(List<String> arguments) async {
     final String name = pubspec[Global.name];
     final String version = pubspec[Global.version];
     final String description = pubspec[Global.description];
-    print(
-        '$name $version - $description serving at http://${server.address.host}:${server.port}');
-    print(
-        'options: monitor=$monitorOption, count=$countOption, days=$daysOption, timer=$timerOption, recursive=$monitorRecursiveOption, printAll=$printAllOption');
+    print('$name $version - $description serving at http://${server.address.host}:${server.port}');
+    print('options: monitor=$monitorOption, count=$countOption, days=$daysOption, timer=$timerOption, recursive=$monitorRecursiveOption, printAll=$printAllOption');
   } catch (exc) {
     print('$function: $exc');
   }
