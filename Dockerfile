@@ -11,7 +11,7 @@ COPY . /app
 
 # Ensure packages are still up-to-date if anything has changed
 RUN dart pub get --offline
-RUN dart compile exe /app/dfiles/server.dart -o /app/bin/dfiles
+RUN dart compile exe /app/src/server.dart -o /app/bin/dfiles
 
 # Build minimal serving image from AOT-compiled `/server` and required system
 # libraries and configuration files stored in `/runtime/` from the build stage.

@@ -1,6 +1,6 @@
 # dfiles
 
-delete cache utility with dart language.
+delete file utility written by dart language.
 
 # monitor
 

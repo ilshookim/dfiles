@@ -1,6 +1,6 @@
-# About dfiles
+# About DFiles
 
-delete files utility with dart language - supported sound null-safety.
+DFiles is a delete files utility written by dart language - supported sound null-safety.
 
 * Storing a large number of files in a folder can slow down the operating system and, in severe cases, hang.
 
@@ -60,7 +60,7 @@ DFiles operation is simple, but it can be applied to various projects.
 
 # Screenshot
 
-![](https://github.com/ilshookim/dfiles/blob/master/snapshot/dfiles-localhost-snapshot.jpg)
+![](https://github.com/ilshookim/dfiles/blob/master/snapshot/dfiles-localhost-snapshot.png)
 
 # Docker
 
@@ -68,7 +68,7 @@ Create a Docker image on your system
 
 $ docker build -t dfiles .
 
-Line 30 of bin/server.dart causes the server to exit as soon as it is ready to listen for requests.
+src/server.dart causes the server to exit as soon as it is ready to listen for requests.
 
 $ docker run -d -it -p 8088:8088 --name dfiles dfiles
 
@@ -116,27 +116,27 @@ $ docker image rm dfiles
 
 # Korean
 
-캐쉬 (또는 파일)을 삭제하는 유틸리티를 다트 언어(dart langauge)로 작성하였습니다 - null 안정화를 지원.
+디파일은 파일을 삭제하는 유틸리티를 다트 언어(dart langauge)로 작성하였습니다 - null 안정화를 지원.
 
 * 많은 수의 파일이 폴더에 남으면 운영체제가 느려지고 심각한 경우에 중지가 될 수 있습니다.
 
-* 디캐쉬를 활용하면 감시하는 경로와 하위 경로를 모두 감시하고
+* 디파일을 활용하면 감시하는 경로와 하위 경로를 모두 감시하고
 지정한 수 보다 파일이 많아지면 오래된 순으로 삭제하는 서비스를 제공받을 수 있습니다.
 
-* 디캐쉬는 파라메터를 지정하여 가볍게 프로세스로 실행할 수 있는 심플한 REST서버입니다.
+* 디파일은 파라메터를 지정하여 가볍게 프로세스로 실행할 수 있는 심플한 REST서버입니다.
 
-* 또한 디캐쉬는 감시할 경로를 볼륨으로 마운트하고 도커 컨테이너로 실행할 수 있습니다.
+* 또한 디파일은 감시할 경로를 볼륨으로 마운트하고 도커 컨테이너로 실행할 수 있습니다.
 
 * 그러므로 curl localhost:8088/stop 또는 curl localhost:8088/start와 같은 호출하여
-디캐쉬 서비스를 중지하거나 실행할 수가 있습니다.
+디파일 서비스를 중지하거나 실행할 수가 있습니다.
 
-* 디캐쉬는 다트 언어(dart language)로 작성하였습니다.
+* 디파일은 다트 언어(dart language)로 작성하였습니다.
 
-* 디캐쉬를 도커 이미지로 만드는 과정에서 네이티브로 빌드를 하기 때문에 네이티브 성능을 기대할 수가 있습니다.
+* 디파일을 도커 이미지로 만드는 과정에서 네이티브로 빌드를 하기 때문에 네이티브 성능을 기대할 수가 있습니다.
 
 # 동작방식
 
-디캐쉬의 동작은 단순하지만 다양한 프로젝트에 응용할 수 있을 것입니다.
+디파일의 동작은 단순하지만 다양한 프로젝트에 응용할 수 있을 것입니다.
 
 **상태의 관리**
 
