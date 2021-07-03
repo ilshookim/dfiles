@@ -1,10 +1,10 @@
 name: dfiles
-description: delete cache utility
+description: delete files utility
 version: 1.0.0
 homepage: https://github.com/ilshookim/dfiles
 
 environment:
-  sdk: '>=2.12.0-0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   # A package for manipulating stack traces and printing them readably.
