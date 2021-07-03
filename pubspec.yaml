@@ -1,7 +1,7 @@
-name: dcache
+name: dfiles
 description: delete cache utility
 version: 1.0.0
-homepage: https://github.com/ilshookim/dcache
+homepage: https://github.com/ilshookim/dfiles
 
 environment:
   sdk: '>=2.12.0-0 <3.0.0'

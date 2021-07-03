@@ -5,8 +5,8 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "dcache",
-            "program": "dcache/server.dart",
+            "name": "dfiles",
+            "program": "dfiles/server.dart",
             "request": "launch",
             "type": "dart",
             "args": [

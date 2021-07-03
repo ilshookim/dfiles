@@ -1,7 +1,7 @@
-/// dcache designed by ilshookim
+/// dfiles designed by ilshookim
 /// MIT License
 ///
-/// https://github.com/ilshookim/dcache
+/// https://github.com/ilshookim/dfiles
 ///
 import 'dart:async';
 import 'dart:io';

@@ -1,7 +1,7 @@
-/// dcache designed by ilshookim
+/// dfiles designed by ilshookim
 /// MIT License
 ///
-/// https://github.com/ilshookim/dcache
+/// https://github.com/ilshookim/dfiles
 ///
 import 'dart:io';
 
@@ -10,7 +10,7 @@ import 'package:yaml/yaml.dart';
 import 'package:stack_trace/stack_trace.dart';
 
 class Global {
-  static final String defaultApp = 'DCACHE';
+  static final String defaultApp = 'DFILES';
   static final String defaultHost = '0.0.0.0';
   static final String defaultPort = '8088';
   static final String defaultMonitor = 'monitor';
