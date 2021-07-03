@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "dfiles",
-            "program": "dfiles/server.dart",
+            "program": "src/server.dart",
             "request": "launch",
             "type": "dart",
             "args": [
